@@ -105,7 +105,7 @@
 
     .filter-grid {
       display: grid;
-      grid-template-columns: minmax(280px, 1fr) minmax(280px, 1fr) auto;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 14px;
       align-items: end;
     }
@@ -118,6 +118,7 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: .04em;
+      text-align: center;
     }
 
 
@@ -191,6 +192,9 @@
     }
 
     .clear-button {
+      grid-column: 1 / -1;
+      justify-self: center;
+      width: min(100%, 420px);
       height: 42px;
       border: 1px solid var(--border);
       background: transparent;
@@ -305,7 +309,7 @@
     @media (max-width: 920px) {
       .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .filter-grid { grid-template-columns: 1fr; }
-      .clear-button { width: 100%; }
+      .clear-button { grid-column: 1; width: 100%; }
     }
 
     @media (max-width: 560px) {
@@ -638,9 +642,9 @@
         return `
           <tr>
             <td>${escapeHtml(record["REMITO MONTE"] ?? "—")}</td>
-            <td class="text-left">${escapeHtml(displayDestination(record.DESTINO))}</td>
-            <td class="text-left">${escapeHtml(record.PREDIO ?? "—")}</td>
-            <td class="text-left">${escapeHtml(record.PRODUCTO ?? "—")}</td>
+            <td>${escapeHtml(displayDestination(record.DESTINO))}</td>
+            <td>${escapeHtml(record.PREDIO ?? "—")}</td>
+            <td>${escapeHtml(record.PRODUCTO ?? "—")}</td>
             <td>${escapeHtml(record["VEHÍCULO"] ?? "—")}</td>
             <td>${escapeHtml(formatDateTime(record["FIN CARGA"]))}</td>
             <td>${escapeHtml(observation)}</td>
