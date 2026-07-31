@@ -1,44 +1,57 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Estado de descarga de remitos</title>
+
   <style>
     :root {
-      --bg: #07111f;
+      --fondo: #07111f;
       --panel: #0d1b2d;
-      --panel-2: #11243a;
-      --border: #203650;
-      --text: #edf4fb;
-      --muted: #91a5bb;
-      --accent: #2da8ff;
-      --accent-soft: rgba(45, 168, 255, .15);
-      --ok: #32c48d;
-      --warn: #f5b942;
-      --danger: #ef6b73;
-      --shadow: 0 18px 45px rgba(0, 0, 0, .28);
+      --panel-secundario: #11243a;
+      --borde: #203650;
+      --texto: #edf4fb;
+      --texto-suave: #91a5bb;
+      --azul: #2da8ff;
+      --azul-suave: rgba(45, 168, 255, 0.15);
+      --verde: #32c48d;
+      --amarillo: #f5b942;
+      --rojo: #ef6b73;
+      --sombra: 0 18px 45px rgba(0, 0, 0, 0.28);
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
       min-height: 100vh;
       background:
-        radial-gradient(circle at top right, rgba(45,168,255,.12), transparent 28%),
-        linear-gradient(180deg, #07111f 0%, #091522 100%);
-      color: var(--text);
-      font-family: Inter, Segoe UI, Roboto, Arial, sans-serif;
+        radial-gradient(
+          circle at top right,
+          rgba(45, 168, 255, 0.12),
+          transparent 28%
+        ),
+        linear-gradient(
+          180deg,
+          #07111f 0%,
+          #091522 100%
+        );
+
+      color: var(--texto);
+      font-family: "Segoe UI", Arial, sans-serif;
     }
 
-    .container {
+    .contenedor {
       width: min(1500px, calc(100% - 28px));
       margin: 0 auto;
       padding: 24px 0 40px;
     }
 
-    .header {
+    .encabezado {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
@@ -50,176 +63,154 @@
       margin: 0 0 7px;
       font-size: clamp(1.45rem, 2.5vw, 2.2rem);
       line-height: 1.1;
-      letter-spacing: -.02em;
     }
 
-    .subtitle {
-      color: var(--muted);
-      font-size: .92rem;
+    .actualizado {
+      color: var(--texto-suave);
+      font-size: 0.92rem;
     }
 
-    .refresh-button {
-      flex: 0 0 auto;
-      border: 1px solid var(--border);
-      background: var(--panel-2);
-      color: var(--text);
+    .boton-actualizar {
+      border: 1px solid var(--borde);
+      background: var(--panel-secundario);
+      color: var(--texto);
       border-radius: 10px;
       padding: 10px 15px;
       font-weight: 700;
       cursor: pointer;
     }
 
-    .refresh-button:hover { border-color: var(--accent); }
-    .refresh-button:disabled { opacity: .55; cursor: wait; }
+    .boton-actualizar:hover {
+      border-color: var(--azul);
+    }
 
-    .cards {
+    .boton-actualizar:disabled {
+      opacity: 0.55;
+      cursor: wait;
+    }
+
+    .tarjetas {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
       margin-bottom: 14px;
     }
 
-    .card, .filters, .table-panel, .error-box {
-      background: rgba(13, 27, 45, .94);
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
+    .tarjeta,
+    .filtros,
+    .panel-tabla,
+    .error {
+      background: rgba(13, 27, 45, 0.94);
+      border: 1px solid var(--borde);
+      box-shadow: var(--sombra);
       border-radius: 14px;
     }
 
-    .card {
+    .tarjeta {
+      min-height: 105px;
       padding: 16px;
       text-align: center;
+
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
     }
-    .card-label { color: var(--muted); font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; }
-    .card-value { margin-top: 7px; font-size: clamp(1.35rem, 3vw, 2rem); font-weight: 800; }
-    .card-value.small { font-size: 1rem; line-height: 1.4; }
 
-    .filters {
+    .tarjeta-titulo {
+      color: var(--texto-suave);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 700;
+    }
+
+    .tarjeta-valor {
+      margin-top: 7px;
+      font-size: clamp(1.35rem, 3vw, 2rem);
+      font-weight: 800;
+    }
+
+    .filtros {
       padding: 16px;
       margin-bottom: 14px;
     }
 
-    .filter-grid {
+    .grilla-filtros {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 14px;
       align-items: end;
     }
 
-    .filter-group label {
+    .grupo-filtro label {
       display: block;
       margin-bottom: 8px;
-      color: var(--muted);
-      font-size: .82rem;
+      color: var(--texto-suave);
+      font-size: 0.82rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: .04em;
       text-align: center;
     }
 
-
-    .days {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      max-height: 108px;
-      overflow: auto;
-      padding-right: 4px;
-    }
-
-    .day-button {
-      border: 1px solid var(--border);
-      background: #091727;
-      color: var(--text);
-      border-radius: 999px;
-      padding: 8px 11px;
-      cursor: pointer;
-      font-size: .84rem;
-      white-space: nowrap;
-    }
-
-    .day-button.active,
-    .destination-button.active,
-    .status-filter-button.active {
-      background: var(--accent-soft);
-      border-color: var(--accent);
-      color: #dff3ff;
-      font-weight: 800;
-    }
-
-    .destinations {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      max-height: 108px;
-      overflow: auto;
-      padding-right: 4px;
-    }
-
-    .destination-button,
-    .status-filter-button {
-      border: 1px solid var(--border);
-      background: #091727;
-      color: var(--text);
-      border-radius: 999px;
-      padding: 8px 11px;
-      cursor: pointer;
-      font-size: .84rem;
-      white-space: nowrap;
-    }
-
-
-    .filter-select {
+    .selector {
       width: 100%;
       height: 42px;
-      border: 1px solid var(--border);
+      border: 1px solid var(--borde);
       background: #091727;
-      color: var(--text);
+      color: var(--texto);
       border-radius: 9px;
       padding: 0 12px;
-      font-size: .88rem;
+      font-size: 0.88rem;
       outline: none;
       cursor: pointer;
     }
 
-    .filter-select:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-soft);
+    .selector:focus {
+      border-color: var(--azul);
+      box-shadow: 0 0 0 3px var(--azul-suave);
     }
 
-    .clear-button {
+    .boton-limpiar {
       grid-column: 1 / -1;
       justify-self: center;
       width: min(100%, 420px);
       height: 42px;
-      border: 1px solid var(--border);
+      border: 1px solid var(--borde);
       background: transparent;
-      color: var(--text);
+      color: var(--texto);
       border-radius: 9px;
-      padding: 0 14px;
       font-weight: 700;
       cursor: pointer;
     }
 
-    .table-panel { overflow: hidden; }
-
-    .table-header {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: center;
-      padding: 15px 16px;
-      border-bottom: 1px solid var(--border);
+    .boton-limpiar:hover {
+      border-color: var(--azul);
     }
 
-    .table-title { font-weight: 800; }
-    .table-count { color: var(--muted); font-size: .86rem; }
+    .panel-tabla {
+      overflow: hidden;
+    }
 
-    .table-wrap {
+    .encabezado-tabla {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 15px 16px;
+      border-bottom: 1px solid var(--borde);
+    }
+
+    .titulo-tabla {
+      font-weight: 800;
+    }
+
+    .cantidad-tabla {
+      color: var(--texto-suave);
+      font-size: 0.86rem;
+    }
+
+    .contenedor-tabla {
       overflow: auto;
       max-height: 68vh;
     }
@@ -229,38 +220,88 @@
       min-width: 1120px;
       border-collapse: collapse;
       table-layout: auto;
-      font-size: .78rem;
+      font-size: 0.78rem;
     }
 
     th {
       position: sticky;
       top: 0;
       z-index: 2;
+
+      padding: 10px 7px;
       background: #10243a;
       color: #bdd0e2;
+      border-bottom: 1px solid var(--borde);
+
       text-align: center;
-      padding: 10px 7px;
-      border-bottom: 1px solid var(--border);
       white-space: nowrap;
     }
 
     td {
       padding: 9px 7px;
-      border-bottom: 1px solid rgba(32, 54, 80, .65);
+      border-bottom: 1px solid rgba(32, 54, 80, 0.65);
+
       text-align: center;
       vertical-align: middle;
       line-height: 1.28;
     }
 
-    th:nth-child(1), td:nth-child(1) { width: 88px; min-width: 88px; }
-    th:nth-child(2), td:nth-child(2) { width: 150px; min-width: 130px; }
-    th:nth-child(3), td:nth-child(3) { width: 175px; min-width: 145px; }
-    th:nth-child(4), td:nth-child(4) { width: 250px; min-width: 210px; }
-    th:nth-child(5), td:nth-child(5) { width: 82px; min-width: 82px; }
-    th:nth-child(6), td:nth-child(6) { width: 126px; min-width: 126px; white-space: nowrap; }
-    th:nth-child(7), td:nth-child(7) { width: 115px; min-width: 95px; }
-    th:nth-child(8), td:nth-child(8) { width: 68px; min-width: 68px; white-space: nowrap; }
-    th:nth-child(9), td:nth-child(9) { width: 118px; min-width: 118px; white-space: nowrap; }
+    th:nth-child(1),
+    td:nth-child(1) {
+      width: 88px;
+      min-width: 88px;
+    }
+
+    th:nth-child(2),
+    td:nth-child(2) {
+      width: 150px;
+      min-width: 130px;
+    }
+
+    th:nth-child(3),
+    td:nth-child(3) {
+      width: 175px;
+      min-width: 145px;
+    }
+
+    th:nth-child(4),
+    td:nth-child(4) {
+      width: 250px;
+      min-width: 210px;
+    }
+
+    th:nth-child(5),
+    td:nth-child(5) {
+      width: 82px;
+      min-width: 82px;
+    }
+
+    th:nth-child(6),
+    td:nth-child(6) {
+      width: 126px;
+      min-width: 126px;
+      white-space: nowrap;
+    }
+
+    th:nth-child(7),
+    td:nth-child(7) {
+      width: 115px;
+      min-width: 95px;
+    }
+
+    th:nth-child(8),
+    td:nth-child(8) {
+      width: 68px;
+      min-width: 68px;
+      white-space: nowrap;
+    }
+
+    th:nth-child(9),
+    td:nth-child(9) {
+      width: 118px;
+      min-width: 118px;
+      white-space: nowrap;
+    }
 
     td:nth-child(2),
     td:nth-child(3),
@@ -268,116 +309,256 @@
     td:nth-child(7) {
       white-space: normal;
       overflow-wrap: break-word;
-      word-break: normal;
     }
 
-    tbody tr:hover { background: rgba(45, 168, 255, .055); }
+    tbody tr:hover {
+      background: rgba(45, 168, 255, 0.055);
+    }
 
-    .text-left { text-align: left; }
-    .muted { color: var(--muted); }
-
-    .status {
+    .estado {
       display: inline-flex;
       align-items: center;
       justify-content: center;
+
       border-radius: 999px;
       padding: 5px 9px;
-      font-size: .75rem;
+
+      font-size: 0.75rem;
       font-weight: 800;
       white-space: nowrap;
-      background: rgba(145,165,187,.13);
-      color: #c8d5e1;
     }
 
-    .status.ok { background: rgba(50,196,141,.14); color: #68e0b2; }
-    .status.warn { background: rgba(245,185,66,.14); color: #ffd275; }
+    .estado-descargado {
+      background: rgba(50, 196, 141, 0.14);
+      color: #68e0b2;
+    }
 
-    .loading {
+    .estado-pendiente {
+      background: rgba(245, 185, 66, 0.14);
+      color: #ffd275;
+    }
+
+    .cargando {
       padding: 42px 18px;
       text-align: center;
-      color: var(--muted);
+      color: var(--texto-suave);
     }
 
-    .error-box {
+    .error {
       display: none;
       padding: 16px;
       margin-bottom: 14px;
-      border-color: rgba(239,107,115,.55);
+      border-color: rgba(239, 107, 115, 0.55);
       color: #ffc2c6;
     }
 
     @media (max-width: 920px) {
-      .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .filter-grid { grid-template-columns: 1fr; }
-      .clear-button { grid-column: 1; width: 100%; }
+      .grilla-filtros {
+        grid-template-columns: 1fr;
+      }
+
+      .boton-limpiar {
+        grid-column: 1;
+        width: 100%;
+      }
     }
 
     @media (max-width: 560px) {
-      .container { width: min(100% - 18px, 1500px); padding-top: 15px; }
-      .header { align-items: stretch; flex-direction: column; }
-      .refresh-button { width: 100%; }
-      .cards { grid-template-columns: 1fr 1fr; gap: 8px; }
-      .card { padding: 13px 11px; }
-      .card-label { font-size: .68rem; }
-      .card-value { font-size: 1.35rem; }
-      .card-value.small { font-size: .82rem; }
-      .filters { padding: 13px; }
-      .table-wrap { max-height: 63vh; }
-      table { font-size: .74rem; min-width: 1080px; }
-      th { padding: 9px 6px; }
-      td { padding: 8px 6px; }
+      .contenedor {
+        width: calc(100% - 18px);
+        padding-top: 15px;
+      }
+
+      .encabezado {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .boton-actualizar {
+        width: 100%;
+      }
+
+      .tarjetas {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .tarjeta {
+        padding: 13px 11px;
+      }
+
+      .tarjeta-titulo {
+        font-size: 0.68rem;
+      }
+
+      .tarjeta-valor {
+        font-size: 1.35rem;
+      }
+
+      .contenedor-tabla {
+        max-height: 63vh;
+      }
+
+      table {
+        min-width: 1080px;
+        font-size: 0.74rem;
+      }
+
+      th {
+        padding: 9px 6px;
+      }
+
+      td {
+        padding: 8px 6px;
+      }
     }
   </style>
 </head>
+
 <body>
-  <main class="container">
-    <header class="header">
+
+  <main class="contenedor">
+
+    <header class="encabezado">
+
       <div>
         <h1>Estado de descarga de remitos</h1>
-        <div class="subtitle" id="updatedText">Cargando información...</div>
+
+        <div
+          class="actualizado"
+          id="textoActualizacion"
+        >
+          Cargando información...
+        </div>
       </div>
-      <button class="refresh-button" id="refreshButton" type="button">Actualizar datos</button>
+
+      <button
+        class="boton-actualizar"
+        id="botonActualizar"
+        type="button"
+      >
+        Actualizar datos
+      </button>
+
     </header>
 
-    <div class="error-box" id="errorBox"></div>
+    <div
+      class="error"
+      id="mensajeError"
+    ></div>
 
-    <section class="cards">
-      <article class="card">
-        <div class="card-label">Registros filtrados</div>
-        <div class="card-value" id="recordsCard">0</div>
+    <section class="tarjetas">
+
+      <article class="tarjeta">
+
+        <div class="tarjeta-titulo">
+          Registros filtrados
+        </div>
+
+        <div
+          class="tarjeta-valor"
+          id="tarjetaRegistros"
+        >
+          0
+        </div>
+
       </article>
-      <article class="card">
-        <div class="card-label">Remitos falta descargar</div>
-        <div class="card-value" id="pendingCard">0</div>
+
+      <article class="tarjeta">
+
+        <div class="tarjeta-titulo">
+          Remitos falta descargar
+        </div>
+
+        <div
+          class="tarjeta-valor"
+          id="tarjetaPendientes"
+        >
+          0
+        </div>
+
       </article>
+
     </section>
 
-    <section class="filters">
-      <div class="filter-grid">
-        <div class="filter-group">
-          <label>Días</label>
-          <select class="filter-select" id="daysContainer"></select>
+    <section class="filtros">
+
+      <div class="grilla-filtros">
+
+        <div class="grupo-filtro">
+
+          <label for="filtroDia">
+            Días
+          </label>
+
+          <select
+            class="selector"
+            id="filtroDia"
+          ></select>
+
         </div>
-        <div class="filter-group">
-          <label>Destino</label>
-          <select class="filter-select" id="destinationsContainer"></select>
+
+        <div class="grupo-filtro">
+
+          <label for="filtroDestino">
+            Destino
+          </label>
+
+          <select
+            class="selector"
+            id="filtroDestino"
+          ></select>
+
         </div>
-        <div class="filter-group">
-          <label>Estado de descarga</label>
-          <select class="filter-select" id="statusContainer"></select>
+
+        <div class="grupo-filtro">
+
+          <label for="filtroEstado">
+            Estado de descarga
+          </label>
+
+          <select
+            class="selector"
+            id="filtroEstado"
+          ></select>
+
         </div>
-        <button class="clear-button" id="clearButton" type="button">Limpiar filtros</button>
+
+        <button
+          class="boton-limpiar"
+          id="botonLimpiar"
+          type="button"
+        >
+          Limpiar filtros
+        </button>
+
       </div>
+
     </section>
 
-    <section class="table-panel">
-      <div class="table-header">
-        <div class="table-title">Detalle de registros</div>
-        <div class="table-count" id="tableCount">0 registros</div>
+    <section class="panel-tabla">
+
+      <div class="encabezado-tabla">
+
+        <div class="titulo-tabla">
+          Detalle de registros
+        </div>
+
+        <div
+          class="cantidad-tabla"
+          id="cantidadTabla"
+        >
+          0 registros
+        </div>
+
       </div>
-      <div class="table-wrap">
+
+      <div class="contenedor-tabla">
+
         <table>
+
           <thead>
+
             <tr>
               <th>REMITO MONTE</th>
               <th>DESTINO</th>
@@ -389,93 +570,199 @@
               <th>NETO</th>
               <th>ESTADO DESCARGA</th>
             </tr>
+
           </thead>
-          <tbody id="tableBody">
-            <tr><td colspan="9" class="loading">Cargando datos...</td></tr>
+
+          <tbody id="cuerpoTabla">
+
+            <tr>
+              <td
+                colspan="9"
+                class="cargando"
+              >
+                Cargando datos...
+              </td>
+            </tr>
+
           </tbody>
+
         </table>
+
       </div>
+
     </section>
+
   </main>
 
   <script>
-    const DATA_URL = "https://dl.dropbox.com/scl/fi/eo971dn4yrjz5h71qkh2b/EstadoDescargaRemitos.json?rlkey=j5udth4t07t8vpaoyqel87j93&dl=1";
+    const URL_DATOS = "/api/datos";
 
-    let allRecords = [];
-    let selectedDay = "";
-    let selectedDestination = "";
-    let selectedStatus = "";
+    let todosLosRegistros = [];
 
-    const daysContainer = document.getElementById("daysContainer");
-    const destinationsContainer = document.getElementById("destinationsContainer");
-    const statusContainer = document.getElementById("statusContainer");
-    const clearButton = document.getElementById("clearButton");
-    const refreshButton = document.getElementById("refreshButton");
-    const tableBody = document.getElementById("tableBody");
-    const errorBox = document.getElementById("errorBox");
+    let diaSeleccionado = "";
+    let destinoSeleccionado = "";
+    let estadoSeleccionado = "";
 
-    const numberFormat = new Intl.NumberFormat("es-UY", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
+    const filtroDia =
+      document.getElementById("filtroDia");
 
-    const integerFormat = new Intl.NumberFormat("es-UY", {
-      maximumFractionDigits: 0
-    });
+    const filtroDestino =
+      document.getElementById("filtroDestino");
 
-    function normalizeJsonText(text) {
-      // Corrige números inválidos con punto final: 111159.  -> 111159
-      return text.replace(/(-?\d+)\.(\s*[,}\]])/g, "$1$2");
+    const filtroEstado =
+      document.getElementById("filtroEstado");
+
+    const botonLimpiar =
+      document.getElementById("botonLimpiar");
+
+    const botonActualizar =
+      document.getElementById("botonActualizar");
+
+    const cuerpoTabla =
+      document.getElementById("cuerpoTabla");
+
+    const mensajeError =
+      document.getElementById("mensajeError");
+
+    const formatoNumero = new Intl.NumberFormat(
+      "es-UY",
+      {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }
+    );
+
+    const formatoEntero = new Intl.NumberFormat(
+      "es-UY",
+      {
+        maximumFractionDigits: 0
+      }
+    );
+
+    function corregirJson(texto) {
+      /*
+        Corrige números inválidos como:
+
+        111159.
+
+        y los convierte en:
+
+        111159
+      */
+
+      return texto.replace(
+        /(-?\d+)\.(\s*[,}\]])/g,
+        "$1$2"
+      );
     }
 
-    function parseLocalDate(value) {
-      if (!value) return null;
-      const date = new Date(value);
-      return Number.isNaN(date.getTime()) ? null : date;
+    function convertirFecha(valor) {
+      if (!valor) {
+        return null;
+      }
+
+      const fecha = new Date(valor);
+
+      if (Number.isNaN(fecha.getTime())) {
+        return null;
+      }
+
+      return fecha;
     }
 
-    function dayKey(value) {
-      const date = parseLocalDate(value);
-      if (!date) return "";
-      const y = date.getFullYear();
-      const m = String(date.getMonth() + 1).padStart(2, "0");
-      const d = String(date.getDate()).padStart(2, "0");
-      return `${y}-${m}-${d}`;
+    function obtenerClaveDia(valor) {
+      const fecha = convertirFecha(valor);
+
+      if (!fecha) {
+        return "";
+      }
+
+      const anio = fecha.getFullYear();
+
+      const mes = String(
+        fecha.getMonth() + 1
+      ).padStart(2, "0");
+
+      const dia = String(
+        fecha.getDate()
+      ).padStart(2, "0");
+
+      return `${anio}-${mes}-${dia}`;
     }
 
-    function formatDay(key) {
-      if (!key) return "Sin fecha";
-      const [y, m, d] = key.split("-");
-      return `${d}/${m}/${y}`;
+    function formatearDia(clave) {
+      if (!clave) {
+        return "Sin fecha";
+      }
+
+      const partes = clave.split("-");
+
+      return `${partes[2]}/${partes[1]}/${partes[0]}`;
     }
 
-    function formatDateTime(value) {
-      const date = parseLocalDate(value);
-      if (!date) return value || "—";
-      const day = String(date.getDate()).padStart(2, "0");
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const year = date.getFullYear();
-      const hour = String(date.getHours()).padStart(2, "0");
-      const minute = String(date.getMinutes()).padStart(2, "0");
-      return `${day}/${month}/${year} ${hour}:${minute}`;
+    function formatearFechaHora(valor) {
+      const fecha = convertirFecha(valor);
+
+      if (!fecha) {
+        return valor || "—";
+      }
+
+      const dia = String(
+        fecha.getDate()
+      ).padStart(2, "0");
+
+      const mes = String(
+        fecha.getMonth() + 1
+      ).padStart(2, "0");
+
+      const anio = fecha.getFullYear();
+
+      const hora = String(
+        fecha.getHours()
+      ).padStart(2, "0");
+
+      const minutos = String(
+        fecha.getMinutes()
+      ).padStart(2, "0");
+
+      return `${dia}/${mes}/${anio} ${hora}:${minutos}`;
     }
 
-    function displayDestination(value) {
-      const original = String(value ?? "").trim();
-      const normalized = original
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .toUpperCase();
+    function mostrarDestino(valor) {
+      const destinoOriginal =
+        String(valor ?? "").trim();
 
-      if (normalized.includes("POLO LOGISTICO")) return "POLO LOGISTICO";
-      if (normalized.includes("UPM") && (normalized.includes("PASO DE LOS TOROS") || normalized.includes("ZONA FRANCA"))) {
+      const destinoNormalizado =
+        destinoOriginal
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .toUpperCase();
+
+      if (
+        destinoNormalizado.includes("POLO LOGISTICO")
+      ) {
+        return "POLO LOGISTICO";
+      }
+
+      if (
+        destinoNormalizado.includes("UPM") &&
+        (
+          destinoNormalizado.includes(
+            "PASO DE LOS TOROS"
+          ) ||
+          destinoNormalizado.includes(
+            "ZONA FRANCA"
+          )
+        )
+      ) {
         return "UPM - PDT";
       }
-      return original || "—";
+
+      return destinoOriginal || "—";
     }
 
-    function escapeHtml(value) {
-      return String(value ?? "")
+    function escaparHtml(valor) {
+      return String(valor ?? "")
         .replaceAll("&", "&amp;")
         .replaceAll("<", "&lt;")
         .replaceAll(">", "&gt;")
@@ -483,190 +770,537 @@
         .replaceAll("'", "&#039;");
     }
 
-    function getNet(record) {
-      const raw = record["YA ENVIADOS.Neto"];
-      if (typeof raw === "number") return Number.isFinite(raw) ? raw : 0;
-      const parsed = Number(String(raw ?? "").replace(",", "."));
-      return Number.isFinite(parsed) ? parsed : 0;
-    }
+    function obtenerNeto(registro) {
+      const valor =
+        registro["YA ENVIADOS.Neto"];
 
-    async function loadData() {
-      errorBox.style.display = "none";
-      refreshButton.disabled = true;
-      refreshButton.textContent = "Actualizando...";
-      tableBody.innerHTML = '<tr><td colspan="9" class="loading">Cargando datos...</td></tr>';
-
-      try {
-        const separator = DATA_URL.includes("?") ? "&" : "?";
-        const response = await fetch(`${DATA_URL}${separator}_=${Date.now()}`, { cache: "no-store" });
-        if (!response.ok) throw new Error(`Dropbox respondió con estado ${response.status}`);
-
-        const rawText = await response.text();
-        const data = JSON.parse(normalizeJsonText(rawText));
-
-        allRecords = Array.isArray(data.registros) ? data.registros : [];
-        document.getElementById("updatedText").textContent = data.actualizado
-          ? `Datos actualizados: ${formatDateTime(data.actualizado)}`
-          : "Fecha de actualización no disponible";
-
-        buildDestinationButtons();
-        buildStatusButtons();
-        buildDays();
-        applyFilters();
-      } catch (error) {
-        allRecords = [];
-        errorBox.style.display = "block";
-        errorBox.innerHTML = `<strong>No fue posible cargar el JSON.</strong><br>${escapeHtml(error.message)}<br><span class="muted">Verificá que el enlace de Dropbox sea público y que el archivo contenga un JSON válido.</span>`;
-        document.getElementById("updatedText").textContent = "Sin datos disponibles";
-        tableBody.innerHTML = '<tr><td colspan="9" class="loading">No se pudieron cargar los registros.</td></tr>';
-        updateCards([]);
-      } finally {
-        refreshButton.disabled = false;
-        refreshButton.textContent = "Actualizar datos";
+      if (typeof valor === "number") {
+        return Number.isFinite(valor)
+          ? valor
+          : 0;
       }
+
+      const numero = Number(
+        String(valor ?? "")
+          .replace(",", ".")
+      );
+
+      return Number.isFinite(numero)
+        ? numero
+        : 0;
     }
 
-    function buildDestinationButtons() {
-      const destinations = [...new Set(allRecords.map(r => String(r.DESTINO ?? "").trim()).filter(Boolean))]
-        .sort((a, b) => displayDestination(a).localeCompare(displayDestination(b), "es"));
-
-      if (selectedDestination && !destinations.includes(selectedDestination)) selectedDestination = "";
-
-      destinationsContainer.innerHTML = [
-        `<option value="">Todos los destinos</option>`,
-        ...destinations.map(destination =>
-          `<option value="${escapeHtml(destination)}" ${selectedDestination === destination ? "selected" : ""}>${escapeHtml(displayDestination(destination))}</option>`
-        )
-      ].join("");
-
-      destinationsContainer.onchange = () => {
-        selectedDestination = destinationsContainer.value || "";
-        applyFilters();
-      };
-    }
-
-    function buildStatusButtons() {
-      const statuses = [...new Set(allRecords
-        .map(r => String(r["ESTADO DESCARGA"] ?? "").trim())
-        .filter(Boolean))]
-        .sort((a, b) => a.localeCompare(b, "es"));
-
-      if (selectedStatus && !statuses.includes(selectedStatus)) selectedStatus = "";
-
-      statusContainer.innerHTML = [
-        `<option value="">Todos los estados</option>`,
-        ...statuses.map(status =>
-          `<option value="${escapeHtml(status)}" ${selectedStatus === status ? "selected" : ""}>${escapeHtml(status)}</option>`
-        )
-      ].join("");
-
-      statusContainer.onchange = () => {
-        selectedStatus = statusContainer.value || "";
-        applyFilters();
-      };
-    }
-
-    function buildDays() {
-      const days = [...new Set(allRecords.map(r => dayKey(r["FIN CARGA"])).filter(Boolean))]
-        .sort((a, b) => b.localeCompare(a));
-
-      if (selectedDay && !days.includes(selectedDay)) selectedDay = "";
-
-      daysContainer.innerHTML = [
-        `<option value="">Todos los días</option>`,
-        ...days.map(day =>
-          `<option value="${day}" ${selectedDay === day ? "selected" : ""}>${formatDay(day)}</option>`
-        )
-      ].join("");
-
-      daysContainer.onchange = () => {
-        selectedDay = daysContainer.value || "";
-        applyFilters();
-      };
-    }
-
-    function applyFilters() {
-      const destination = selectedDestination;
-      const filtered = allRecords.filter(record => {
-        const matchDay = !selectedDay || dayKey(record["FIN CARGA"]) === selectedDay;
-        const matchDestination = !destination || String(record.DESTINO ?? "") === destination;
-        const matchStatus = !selectedStatus || String(record["ESTADO DESCARGA"] ?? "").trim() === selectedStatus;
-        return matchDay && matchDestination && matchStatus;
-      });
-
-      filtered.sort((a, b) => {
-        const dateA = parseLocalDate(a["FIN CARGA"])?.getTime() || 0;
-        const dateB = parseLocalDate(b["FIN CARGA"])?.getTime() || 0;
-        return dateB - dateA;
-      });
-
-      updateCards(filtered);
-      renderTable(filtered);
-    }
-
-    function updateCards(records) {
-      const pending = records.filter(r => !isDownloaded(r["ESTADO DESCARGA"]));
-
-      document.getElementById("recordsCard").textContent = integerFormat.format(records.length);
-      document.getElementById("pendingCard").textContent = integerFormat.format(pending.length);
-      document.getElementById("tableCount").textContent = `${integerFormat.format(records.length)} registros`;
-    }
-
-
-    function normalizeStatus(value) {
-      return String(value ?? "")
+    function normalizarEstado(valor) {
+      return String(valor ?? "")
         .trim()
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
         .toUpperCase();
     }
 
-    function isDownloaded(value) {
-      const status = normalizeStatus(value);
-      return status === "DESCARGO" || status === "DESCARGADO" || status === "DESCARGADA";
+    function estaDescargado(valor) {
+      const estado =
+        normalizarEstado(valor);
+
+      return (
+        estado === "DESCARGO" ||
+        estado === "DESCARGADO" ||
+        estado === "DESCARGADA"
+      );
     }
-    function renderTable(records) {
-      if (!records.length) {
-        tableBody.innerHTML = '<tr><td colspan="9" class="loading">No hay registros para los filtros seleccionados.</td></tr>';
+
+    async function cargarDatos() {
+      mensajeError.style.display = "none";
+
+      botonActualizar.disabled = true;
+      botonActualizar.textContent =
+        "Actualizando...";
+
+      cuerpoTabla.innerHTML = `
+        <tr>
+          <td
+            colspan="9"
+            class="cargando"
+          >
+            Cargando datos...
+          </td>
+        </tr>
+      `;
+
+      try {
+        const respuesta = await fetch(
+          `${URL_DATOS}?_=${Date.now()}`,
+          {
+            cache: "no-store"
+          }
+        );
+
+        if (!respuesta.ok) {
+          throw new Error(
+            `La API respondió con estado ${respuesta.status}`
+          );
+        }
+
+        const texto =
+          await respuesta.text();
+
+        const datos = JSON.parse(
+          corregirJson(texto)
+        );
+
+        todosLosRegistros =
+          Array.isArray(datos.registros)
+            ? datos.registros
+            : [];
+
+        const textoActualizacion =
+          document.getElementById(
+            "textoActualizacion"
+          );
+
+        textoActualizacion.textContent =
+          datos.actualizado
+            ? `Datos actualizados: ${formatearFechaHora(datos.actualizado)}`
+            : "Fecha de actualización no disponible";
+
+        construirFiltroDias();
+        construirFiltroDestinos();
+        construirFiltroEstados();
+
+        aplicarFiltros();
+
+      } catch (error) {
+        todosLosRegistros = [];
+
+        mensajeError.style.display = "block";
+
+        mensajeError.innerHTML = `
+          <strong>
+            No fue posible cargar el JSON.
+          </strong>
+          <br>
+          ${escaparHtml(error.message)}
+          <br>
+          Verificá la variable
+          DROPBOX_JSON_URL en Cloudflare.
+        `;
+
+        document.getElementById(
+          "textoActualizacion"
+        ).textContent =
+          "Sin datos disponibles";
+
+        cuerpoTabla.innerHTML = `
+          <tr>
+            <td
+              colspan="9"
+              class="cargando"
+            >
+              No se pudieron cargar los registros.
+            </td>
+          </tr>
+        `;
+
+        actualizarTarjetas([]);
+
+      } finally {
+        botonActualizar.disabled = false;
+        botonActualizar.textContent =
+          "Actualizar datos";
+      }
+    }
+
+    function construirFiltroDias() {
+      const dias = [
+        ...new Set(
+          todosLosRegistros
+            .map(
+              registro =>
+                obtenerClaveDia(
+                  registro["FIN CARGA"]
+                )
+            )
+            .filter(Boolean)
+        )
+      ].sort(
+        (a, b) =>
+          b.localeCompare(a)
+      );
+
+      if (
+        diaSeleccionado &&
+        !dias.includes(diaSeleccionado)
+      ) {
+        diaSeleccionado = "";
+      }
+
+      filtroDia.innerHTML = [
+        `
+          <option value="">
+            Todos los días
+          </option>
+        `,
+        ...dias.map(
+          dia => `
+            <option
+              value="${dia}"
+              ${
+                diaSeleccionado === dia
+                  ? "selected"
+                  : ""
+              }
+            >
+              ${formatearDia(dia)}
+            </option>
+          `
+        )
+      ].join("");
+
+      filtroDia.onchange = () => {
+        diaSeleccionado =
+          filtroDia.value || "";
+
+        aplicarFiltros();
+      };
+    }
+
+    function construirFiltroDestinos() {
+      const destinos = [
+        ...new Set(
+          todosLosRegistros
+            .map(
+              registro =>
+                String(
+                  registro.DESTINO ?? ""
+                ).trim()
+            )
+            .filter(Boolean)
+        )
+      ].sort(
+        (a, b) =>
+          mostrarDestino(a).localeCompare(
+            mostrarDestino(b),
+            "es"
+          )
+      );
+
+      if (
+        destinoSeleccionado &&
+        !destinos.includes(
+          destinoSeleccionado
+        )
+      ) {
+        destinoSeleccionado = "";
+      }
+
+      filtroDestino.innerHTML = [
+        `
+          <option value="">
+            Todos los destinos
+          </option>
+        `,
+        ...destinos.map(
+          destino => `
+            <option
+              value="${escaparHtml(destino)}"
+              ${
+                destinoSeleccionado === destino
+                  ? "selected"
+                  : ""
+              }
+            >
+              ${escaparHtml(
+                mostrarDestino(destino)
+              )}
+            </option>
+          `
+        )
+      ].join("");
+
+      filtroDestino.onchange = () => {
+        destinoSeleccionado =
+          filtroDestino.value || "";
+
+        aplicarFiltros();
+      };
+    }
+
+    function construirFiltroEstados() {
+      const estados = [
+        ...new Set(
+          todosLosRegistros
+            .map(
+              registro =>
+                String(
+                  registro["ESTADO DESCARGA"] ?? ""
+                ).trim()
+            )
+            .filter(Boolean)
+        )
+      ].sort(
+        (a, b) =>
+          a.localeCompare(b, "es")
+      );
+
+      if (
+        estadoSeleccionado &&
+        !estados.includes(
+          estadoSeleccionado
+        )
+      ) {
+        estadoSeleccionado = "";
+      }
+
+      filtroEstado.innerHTML = [
+        `
+          <option value="">
+            Todos los estados
+          </option>
+        `,
+        ...estados.map(
+          estado => `
+            <option
+              value="${escaparHtml(estado)}"
+              ${
+                estadoSeleccionado === estado
+                  ? "selected"
+                  : ""
+              }
+            >
+              ${escaparHtml(estado)}
+            </option>
+          `
+        )
+      ].join("");
+
+      filtroEstado.onchange = () => {
+        estadoSeleccionado =
+          filtroEstado.value || "";
+
+        aplicarFiltros();
+      };
+    }
+
+    function aplicarFiltros() {
+      const registrosFiltrados =
+        todosLosRegistros.filter(
+          registro => {
+            const coincideDia =
+              !diaSeleccionado ||
+              obtenerClaveDia(
+                registro["FIN CARGA"]
+              ) === diaSeleccionado;
+
+            const coincideDestino =
+              !destinoSeleccionado ||
+              String(
+                registro.DESTINO ?? ""
+              ) === destinoSeleccionado;
+
+            const coincideEstado =
+              !estadoSeleccionado ||
+              String(
+                registro["ESTADO DESCARGA"] ?? ""
+              ).trim() === estadoSeleccionado;
+
+            return (
+              coincideDia &&
+              coincideDestino &&
+              coincideEstado
+            );
+          }
+        );
+
+      registrosFiltrados.sort(
+        (a, b) => {
+          const fechaA =
+            convertirFecha(
+              a["FIN CARGA"]
+            )?.getTime() || 0;
+
+          const fechaB =
+            convertirFecha(
+              b["FIN CARGA"]
+            )?.getTime() || 0;
+
+          return fechaB - fechaA;
+        }
+      );
+
+      actualizarTarjetas(
+        registrosFiltrados
+      );
+
+      mostrarTabla(
+        registrosFiltrados
+      );
+    }
+
+    function actualizarTarjetas(registros) {
+      const pendientes =
+        registros.filter(
+          registro =>
+            !estaDescargado(
+              registro["ESTADO DESCARGA"]
+            )
+        );
+
+      document.getElementById(
+        "tarjetaRegistros"
+      ).textContent =
+        formatoEntero.format(
+          registros.length
+        );
+
+      document.getElementById(
+        "tarjetaPendientes"
+      ).textContent =
+        formatoEntero.format(
+          pendientes.length
+        );
+
+      document.getElementById(
+        "cantidadTabla"
+      ).textContent =
+        `${formatoEntero.format(
+          registros.length
+        )} registros`;
+    }
+
+    function mostrarTabla(registros) {
+      if (!registros.length) {
+        cuerpoTabla.innerHTML = `
+          <tr>
+            <td
+              colspan="9"
+              class="cargando"
+            >
+              No hay registros para los filtros seleccionados.
+            </td>
+          </tr>
+        `;
+
         return;
       }
 
-      tableBody.innerHTML = records.map(record => {
-        const statusText = String(record["ESTADO DESCARGA"] ?? "—");
-        const statusUpper = statusText.toUpperCase();
-        const statusClass = isDownloaded(statusText) ? "ok" : "warn";
-        const observation = record.OBSERVACIONES == null || String(record.OBSERVACIONES).toLowerCase() === "nan"
-          ? "—"
-          : record.OBSERVACIONES;
+      cuerpoTabla.innerHTML =
+        registros.map(
+          registro => {
+            const textoEstado =
+              String(
+                registro["ESTADO DESCARGA"] ?? "—"
+              );
 
-        return `
-          <tr>
-            <td>${escapeHtml(record["REMITO MONTE"] ?? "—")}</td>
-            <td>${escapeHtml(displayDestination(record.DESTINO))}</td>
-            <td>${escapeHtml(record.PREDIO ?? "—")}</td>
-            <td>${escapeHtml(record.PRODUCTO ?? "—")}</td>
-            <td>${escapeHtml(record["VEHÍCULO"] ?? "—")}</td>
-            <td>${escapeHtml(formatDateTime(record["FIN CARGA"]))}</td>
-            <td>${escapeHtml(observation)}</td>
-            <td>${numberFormat.format(getNet(record))}</td>
-            <td><span class="status ${statusClass}">${escapeHtml(statusText)}</span></td>
-          </tr>`;
-      }).join("");
+            const claseEstado =
+              estaDescargado(textoEstado)
+                ? "estado-descargado"
+                : "estado-pendiente";
+
+            let observaciones =
+              registro.OBSERVACIONES;
+
+            if (
+              observaciones == null ||
+              String(observaciones)
+                .trim()
+                .toLowerCase() === "nan"
+            ) {
+              observaciones = "—";
+            }
+
+            return `
+              <tr>
+
+                <td>
+                  ${escaparHtml(
+                    registro["REMITO MONTE"] ?? "—"
+                  )}
+                </td>
+
+                <td>
+                  ${escaparHtml(
+                    mostrarDestino(
+                      registro.DESTINO
+                    )
+                  )}
+                </td>
+
+                <td>
+                  ${escaparHtml(
+                    registro.PREDIO ?? "—"
+                  )}
+                </td>
+
+                <td>
+                  ${escaparHtml(
+                    registro.PRODUCTO ?? "—"
+                  )}
+                </td>
+
+                <td>
+                  ${escaparHtml(
+                    registro["VEHÍCULO"] ?? "—"
+                  )}
+                </td>
+
+                <td>
+                  ${escaparHtml(
+                    formatearFechaHora(
+                      registro["FIN CARGA"]
+                    )
+                  )}
+                </td>
+
+                <td>
+                  ${escaparHtml(
+                    observaciones
+                  )}
+                </td>
+
+                <td>
+                  ${formatoNumero.format(
+                    obtenerNeto(registro)
+                  )}
+                </td>
+
+                <td>
+                  <span
+                    class="estado ${claseEstado}"
+                  >
+                    ${escaparHtml(
+                      textoEstado
+                    )}
+                  </span>
+                </td>
+
+              </tr>
+            `;
+          }
+        ).join("");
     }
 
-    clearButton.addEventListener("click", () => {
-      selectedDay = "";
-      selectedDestination = "";
-      selectedStatus = "";
-      buildDays();
-      buildDestinationButtons();
-      buildStatusButtons();
-      applyFilters();
-    });
+    botonLimpiar.addEventListener(
+      "click",
+      () => {
+        diaSeleccionado = "";
+        destinoSeleccionado = "";
+        estadoSeleccionado = "";
 
-    refreshButton.addEventListener("click", loadData);
+        construirFiltroDias();
+        construirFiltroDestinos();
+        construirFiltroEstados();
 
-    loadData();
+        aplicarFiltros();
+      }
+    );
+
+    botonActualizar.addEventListener(
+      "click",
+      cargarDatos
+    );
+
+    cargarDatos();
   </script>
+
 </body>
 </html>
