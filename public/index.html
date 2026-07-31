@@ -26,9 +26,14 @@
       box-sizing: border-box;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
       min-height: 100vh;
+
       background:
         radial-gradient(
           circle at top right,
@@ -98,6 +103,7 @@
 
     .tarjeta,
     .filtros,
+    .panel-resumen,
     .panel-tabla,
     .error {
       background: rgba(13, 27, 45, 0.94);
@@ -123,12 +129,14 @@
       text-transform: uppercase;
       letter-spacing: 0.06em;
       font-weight: 700;
+      text-align: center;
     }
 
     .tarjeta-valor {
       margin-top: 7px;
       font-size: clamp(1.35rem, 3vw, 2rem);
       font-weight: 800;
+      text-align: center;
     }
 
     .filtros {
@@ -164,6 +172,7 @@
       font-size: 0.88rem;
       outline: none;
       cursor: pointer;
+      text-align: center;
     }
 
     .selector:focus {
@@ -188,11 +197,16 @@
       border-color: var(--azul);
     }
 
-    .panel-tabla {
+    .panel-resumen {
       overflow: hidden;
+      margin-bottom: 14px;
     }
 
-    .encabezado-tabla {
+    .panel-tabla {
+      overflow: visible;
+    }
+
+    .encabezado-seccion {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -201,21 +215,110 @@
       border-bottom: 1px solid var(--borde);
     }
 
-    .titulo-tabla {
+    .titulo-seccion {
       font-weight: 800;
     }
 
-    .cantidad-tabla {
+    .cantidad-seccion {
       color: var(--texto-suave);
       font-size: 0.86rem;
     }
 
-    .contenedor-tabla {
-      overflow: auto;
-      max-height: 68vh;
+    .contenedor-resumen {
+      overflow-x: auto;
+      overflow-y: visible;
     }
 
-    table {
+    .tabla-resumen {
+      width: 100%;
+      min-width: 700px;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 0.82rem;
+    }
+
+    .tabla-resumen th {
+      padding: 11px 8px;
+      background: #10243a;
+      color: #bdd0e2;
+      border-bottom: 1px solid var(--borde);
+      text-align: center;
+      white-space: normal;
+      line-height: 1.25;
+    }
+
+    .tabla-resumen td {
+      padding: 10px 8px;
+      border-bottom: 1px solid rgba(32, 54, 80, 0.65);
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .tabla-resumen th:nth-child(1),
+    .tabla-resumen td:nth-child(1) {
+      width: 17%;
+    }
+
+    .tabla-resumen th:nth-child(2),
+    .tabla-resumen td:nth-child(2) {
+      width: 29%;
+    }
+
+    .tabla-resumen th:nth-child(3),
+    .tabla-resumen td:nth-child(3) {
+      width: 18%;
+    }
+
+    .tabla-resumen th:nth-child(4),
+    .tabla-resumen td:nth-child(4) {
+      width: 18%;
+    }
+
+    .tabla-resumen th:nth-child(5),
+    .tabla-resumen td:nth-child(5) {
+      width: 18%;
+    }
+
+    .tabla-resumen tbody tr:hover {
+      background: rgba(45, 168, 255, 0.055);
+    }
+
+    .valor-resumen {
+      font-size: 1rem;
+      font-weight: 800;
+    }
+
+    .valor-total {
+      color: var(--azul);
+    }
+
+    .valor-descargado {
+      color: #68e0b2;
+    }
+
+    .valor-pendiente {
+      color: #ffd275;
+    }
+
+    /*
+      SIN SCROLL VERTICAL INTERNO.
+
+      La tabla crece hacia abajo y la página usa
+      el desplazamiento normal del navegador.
+
+      Se conserva únicamente el desplazamiento
+      horizontal cuando el ancho de la pantalla
+      no permite mostrar todas las columnas.
+    */
+    .contenedor-tabla {
+      width: 100%;
+      height: auto;
+      max-height: none;
+      overflow-x: auto;
+      overflow-y: visible;
+    }
+
+    .tabla-detalle {
       width: 100%;
       min-width: 1120px;
       border-collapse: collapse;
@@ -223,11 +326,7 @@
       font-size: 0.78rem;
     }
 
-    th {
-      position: sticky;
-      top: 0;
-      z-index: 2;
-
+    .tabla-detalle th {
       padding: 10px 7px;
       background: #10243a;
       color: #bdd0e2;
@@ -237,7 +336,7 @@
       white-space: nowrap;
     }
 
-    td {
+    .tabla-detalle td {
       padding: 9px 7px;
       border-bottom: 1px solid rgba(32, 54, 80, 0.65);
 
@@ -246,72 +345,72 @@
       line-height: 1.28;
     }
 
-    th:nth-child(1),
-    td:nth-child(1) {
+    .tabla-detalle th:nth-child(1),
+    .tabla-detalle td:nth-child(1) {
       width: 88px;
       min-width: 88px;
     }
 
-    th:nth-child(2),
-    td:nth-child(2) {
+    .tabla-detalle th:nth-child(2),
+    .tabla-detalle td:nth-child(2) {
       width: 150px;
       min-width: 130px;
     }
 
-    th:nth-child(3),
-    td:nth-child(3) {
+    .tabla-detalle th:nth-child(3),
+    .tabla-detalle td:nth-child(3) {
       width: 175px;
       min-width: 145px;
     }
 
-    th:nth-child(4),
-    td:nth-child(4) {
+    .tabla-detalle th:nth-child(4),
+    .tabla-detalle td:nth-child(4) {
       width: 250px;
       min-width: 210px;
     }
 
-    th:nth-child(5),
-    td:nth-child(5) {
+    .tabla-detalle th:nth-child(5),
+    .tabla-detalle td:nth-child(5) {
       width: 82px;
       min-width: 82px;
     }
 
-    th:nth-child(6),
-    td:nth-child(6) {
+    .tabla-detalle th:nth-child(6),
+    .tabla-detalle td:nth-child(6) {
       width: 126px;
       min-width: 126px;
       white-space: nowrap;
     }
 
-    th:nth-child(7),
-    td:nth-child(7) {
+    .tabla-detalle th:nth-child(7),
+    .tabla-detalle td:nth-child(7) {
       width: 115px;
       min-width: 95px;
     }
 
-    th:nth-child(8),
-    td:nth-child(8) {
+    .tabla-detalle th:nth-child(8),
+    .tabla-detalle td:nth-child(8) {
       width: 68px;
       min-width: 68px;
       white-space: nowrap;
     }
 
-    th:nth-child(9),
-    td:nth-child(9) {
+    .tabla-detalle th:nth-child(9),
+    .tabla-detalle td:nth-child(9) {
       width: 118px;
       min-width: 118px;
       white-space: nowrap;
     }
 
-    td:nth-child(2),
-    td:nth-child(3),
-    td:nth-child(4),
-    td:nth-child(7) {
+    .tabla-detalle td:nth-child(2),
+    .tabla-detalle td:nth-child(3),
+    .tabla-detalle td:nth-child(4),
+    .tabla-detalle td:nth-child(7) {
       white-space: normal;
       overflow-wrap: break-word;
     }
 
-    tbody tr:hover {
+    .tabla-detalle tbody tr:hover {
       background: rgba(45, 168, 255, 0.055);
     }
 
@@ -340,6 +439,12 @@
 
     .cargando {
       padding: 42px 18px;
+      text-align: center;
+      color: var(--texto-suave);
+    }
+
+    .sin-registros {
+      padding: 25px 18px;
       text-align: center;
       color: var(--texto-suave);
     }
@@ -395,20 +500,29 @@
         font-size: 1.35rem;
       }
 
-      .contenedor-tabla {
-        max-height: 63vh;
+      .tabla-resumen {
+        min-width: 650px;
+        font-size: 0.76rem;
       }
 
-      table {
+      .contenedor-tabla {
+        width: 100%;
+        height: auto;
+        max-height: none;
+        overflow-x: auto;
+        overflow-y: visible;
+      }
+
+      .tabla-detalle {
         min-width: 1080px;
         font-size: 0.74rem;
       }
 
-      th {
+      .tabla-detalle th {
         padding: 9px 6px;
       }
 
-      td {
+      .tabla-detalle td {
         padding: 8px 6px;
       }
     }
@@ -536,16 +650,68 @@
 
     </section>
 
+    <section class="panel-resumen">
+
+      <div class="encabezado-seccion">
+
+        <div class="titulo-seccion">
+          Resumen por día y destino
+        </div>
+
+        <div
+          class="cantidad-seccion"
+          id="cantidadResumen"
+        >
+          0 filas
+        </div>
+
+      </div>
+
+      <div class="contenedor-resumen">
+
+        <table class="tabla-resumen">
+
+          <thead>
+
+            <tr>
+              <th>DÍA</th>
+              <th>DESTINO</th>
+              <th>TOTAL</th>
+              <th>DESCARGÓ</th>
+              <th>FALTA DESCARGAR</th>
+            </tr>
+
+          </thead>
+
+          <tbody id="cuerpoResumen">
+
+            <tr>
+              <td
+                colspan="5"
+                class="sin-registros"
+              >
+                Cargando resumen...
+              </td>
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
     <section class="panel-tabla">
 
-      <div class="encabezado-tabla">
+      <div class="encabezado-seccion">
 
-        <div class="titulo-tabla">
+        <div class="titulo-seccion">
           Detalle de registros
         </div>
 
         <div
-          class="cantidad-tabla"
+          class="cantidad-seccion"
           id="cantidadTabla"
         >
           0 registros
@@ -555,7 +721,7 @@
 
       <div class="contenedor-tabla">
 
-        <table>
+        <table class="tabla-detalle">
 
           <thead>
 
@@ -618,6 +784,9 @@
     const botonActualizar =
       document.getElementById("botonActualizar");
 
+    const cuerpoResumen =
+      document.getElementById("cuerpoResumen");
+
     const cuerpoTabla =
       document.getElementById("cuerpoTabla");
 
@@ -640,16 +809,6 @@
     );
 
     function corregirJson(texto) {
-      /*
-        Corrige números inválidos como:
-
-        111159.
-
-        y los convierte en:
-
-        111159
-      */
-
       return texto.replace(
         /(-?\d+)\.(\s*[,}\]])/g,
         "$1$2"
@@ -816,6 +975,17 @@
       botonActualizar.textContent =
         "Actualizando...";
 
+      cuerpoResumen.innerHTML = `
+        <tr>
+          <td
+            colspan="5"
+            class="sin-registros"
+          >
+            Cargando resumen...
+          </td>
+        </tr>
+      `;
+
       cuerpoTabla.innerHTML = `
         <tr>
           <td
@@ -890,6 +1060,17 @@
         ).textContent =
           "Sin datos disponibles";
 
+        cuerpoResumen.innerHTML = `
+          <tr>
+            <td
+              colspan="5"
+              class="sin-registros"
+            >
+              No se pudo generar el resumen.
+            </td>
+          </tr>
+        `;
+
         cuerpoTabla.innerHTML = `
           <tr>
             <td
@@ -902,6 +1083,7 @@
         `;
 
         actualizarTarjetas([]);
+        actualizarCantidadResumen(0);
 
       } finally {
         botonActualizar.disabled = false;
@@ -1131,6 +1313,10 @@
         registrosFiltrados
       );
 
+      mostrarResumen(
+        registrosFiltrados
+      );
+
       mostrarTabla(
         registrosFiltrados
       );
@@ -1165,6 +1351,157 @@
         `${formatoEntero.format(
           registros.length
         )} registros`;
+    }
+
+    function actualizarCantidadResumen(cantidad) {
+      document.getElementById(
+        "cantidadResumen"
+      ).textContent =
+        `${formatoEntero.format(cantidad)} filas`;
+    }
+
+    function crearResumen(registros) {
+      const grupos = new Map();
+
+      registros.forEach(
+        registro => {
+          const dia =
+            obtenerClaveDia(
+              registro["FIN CARGA"]
+            ) || "SIN_FECHA";
+
+          const destinoOriginal =
+            String(
+              registro.DESTINO ?? ""
+            ).trim();
+
+          const destinoVisible =
+            mostrarDestino(destinoOriginal);
+
+          const clave =
+            `${dia}|||${destinoVisible}`;
+
+          if (!grupos.has(clave)) {
+            grupos.set(
+              clave,
+              {
+                dia,
+                destino: destinoVisible,
+                total: 0,
+                descargados: 0,
+                pendientes: 0
+              }
+            );
+          }
+
+          const grupo =
+            grupos.get(clave);
+
+          grupo.total += 1;
+
+          if (
+            estaDescargado(
+              registro["ESTADO DESCARGA"]
+            )
+          ) {
+            grupo.descargados += 1;
+          } else {
+            grupo.pendientes += 1;
+          }
+        }
+      );
+
+      return [
+        ...grupos.values()
+      ].sort(
+        (a, b) => {
+          if (a.dia !== b.dia) {
+            return b.dia.localeCompare(a.dia);
+          }
+
+          return a.destino.localeCompare(
+            b.destino,
+            "es"
+          );
+        }
+      );
+    }
+
+    function mostrarResumen(registros) {
+      const resumen =
+        crearResumen(registros);
+
+      actualizarCantidadResumen(
+        resumen.length
+      );
+
+      if (!resumen.length) {
+        cuerpoResumen.innerHTML = `
+          <tr>
+            <td
+              colspan="5"
+              class="sin-registros"
+            >
+              No hay datos para generar el resumen.
+            </td>
+          </tr>
+        `;
+
+        return;
+      }
+
+      cuerpoResumen.innerHTML =
+        resumen.map(
+          fila => `
+            <tr>
+
+              <td>
+                ${
+                  fila.dia === "SIN_FECHA"
+                    ? "Sin fecha"
+                    : formatearDia(fila.dia)
+                }
+              </td>
+
+              <td>
+                ${escaparHtml(
+                  fila.destino
+                )}
+              </td>
+
+              <td>
+                <span
+                  class="valor-resumen valor-total"
+                >
+                  ${formatoEntero.format(
+                    fila.total
+                  )}
+                </span>
+              </td>
+
+              <td>
+                <span
+                  class="valor-resumen valor-descargado"
+                >
+                  ${formatoEntero.format(
+                    fila.descargados
+                  )}
+                </span>
+              </td>
+
+              <td>
+                <span
+                  class="valor-resumen valor-pendiente"
+                >
+                  ${formatoEntero.format(
+                    fila.pendientes
+                  )}
+                </span>
+              </td>
+
+            </tr>
+          `
+        ).join("");
     }
 
     function mostrarTabla(registros) {
