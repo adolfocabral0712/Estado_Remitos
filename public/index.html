@@ -103,6 +103,7 @@
 
     .tarjeta,
     .filtros,
+    .panel-predios,
     .panel-resumen,
     .panel-tabla,
     .error {
@@ -196,6 +197,83 @@
     .boton-limpiar:hover {
       border-color: var(--azul);
     }
+
+    /* =====================================================
+       TARJETAS POR PREDIO
+       ===================================================== */
+
+    .panel-predios {
+      margin-bottom: 14px;
+      padding: 16px;
+    }
+
+    .titulo-predios {
+      font-weight: 800;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .grilla-predios {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+    }
+
+    .tarjeta-predio {
+      min-height: 112px;
+      background: #0a1929;
+      border: 1px solid var(--borde);
+      border-radius: 11px;
+      padding: 13px 10px;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      text-align: center;
+    }
+
+    .nombre-predio {
+      color: #c6d7e7;
+      font-size: 0.77rem;
+      line-height: 1.25;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 7px;
+    }
+
+    .valor-predio {
+      color: var(--texto);
+      font-size: 1.55rem;
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .leyenda-predio {
+      margin-top: 7px;
+      color: var(--texto-suave);
+      font-size: 0.69rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-weight: 700;
+    }
+
+    .porcentaje-predio {
+      margin-top: 5px;
+      font-size: 0.72rem;
+      color: #68e0b2;
+      font-weight: 700;
+    }
+
+    .sin-predios {
+      grid-column: 1 / -1;
+      padding: 18px;
+      text-align: center;
+      color: var(--texto-suave);
+    }
+
+    /* ===================================================== */
 
     .panel-resumen {
       overflow: hidden;
@@ -300,16 +378,6 @@
       color: #ffd275;
     }
 
-    /*
-      SIN SCROLL VERTICAL INTERNO.
-
-      La tabla crece hacia abajo y la página usa
-      el desplazamiento normal del navegador.
-
-      Se conserva únicamente el desplazamiento
-      horizontal cuando el ancho de la pantalla
-      no permite mostrar todas las columnas.
-    */
     .contenedor-tabla {
       width: 100%;
       height: auto;
@@ -331,7 +399,6 @@
       background: #10243a;
       color: #bdd0e2;
       border-bottom: 1px solid var(--borde);
-
       text-align: center;
       white-space: nowrap;
     }
@@ -339,7 +406,6 @@
     .tabla-detalle td {
       padding: 9px 7px;
       border-bottom: 1px solid rgba(32, 54, 80, 0.65);
-
       text-align: center;
       vertical-align: middle;
       line-height: 1.28;
@@ -418,10 +484,8 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-
       border-radius: 999px;
       padding: 5px 9px;
-
       font-size: 0.75rem;
       font-weight: 800;
       white-space: nowrap;
@@ -498,6 +562,28 @@
 
       .tarjeta-valor {
         font-size: 1.35rem;
+      }
+
+      .grilla-predios {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .tarjeta-predio {
+        min-height: 105px;
+        padding: 10px 7px;
+      }
+
+      .nombre-predio {
+        font-size: 0.68rem;
+      }
+
+      .valor-predio {
+        font-size: 1.3rem;
+      }
+
+      .leyenda-predio {
+        font-size: 0.6rem;
       }
 
       .tabla-resumen {
@@ -650,6 +736,29 @@
 
     </section>
 
+    <!-- =====================================================
+         TARJETAS POR PREDIO
+         ===================================================== -->
+
+    <section class="panel-predios">
+
+      <div class="titulo-predios">
+        Descargados / Cargados por predio
+      </div>
+
+      <div
+        class="grilla-predios"
+        id="grillaPredios"
+      >
+        <div class="sin-predios">
+          Cargando predios...
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ===================================================== -->
+
     <section class="panel-resumen">
 
       <div class="encabezado-seccion">
@@ -790,6 +899,9 @@
     const cuerpoTabla =
       document.getElementById("cuerpoTabla");
 
+    const grillaPredios =
+      document.getElementById("grillaPredios");
+
     const mensajeError =
       document.getElementById("mensajeError");
 
@@ -920,6 +1032,20 @@
       return destinoOriginal || "—";
     }
 
+    function mostrarPredio(valor) {
+      const texto =
+        String(valor ?? "").trim();
+
+      if (!texto) {
+        return "SIN PREDIO";
+      }
+
+      const partes =
+        texto.split(" - ");
+
+      return partes[0].trim() || texto;
+    }
+
     function escaparHtml(valor) {
       return String(valor ?? "")
         .replaceAll("&", "&amp;")
@@ -974,6 +1100,12 @@
       botonActualizar.disabled = true;
       botonActualizar.textContent =
         "Actualizando...";
+
+      grillaPredios.innerHTML = `
+        <div class="sin-predios">
+          Cargando predios...
+        </div>
+      `;
 
       cuerpoResumen.innerHTML = `
         <tr>
@@ -1059,6 +1191,12 @@
           "textoActualizacion"
         ).textContent =
           "Sin datos disponibles";
+
+        grillaPredios.innerHTML = `
+          <div class="sin-predios">
+            No se pudieron cargar los predios.
+          </div>
+        `;
 
         cuerpoResumen.innerHTML = `
           <tr>
@@ -1313,6 +1451,10 @@
         registrosFiltrados
       );
 
+      mostrarTarjetasPredio(
+        registrosFiltrados
+      );
+
       mostrarResumen(
         registrosFiltrados
       );
@@ -1352,6 +1494,118 @@
           registros.length
         )} registros`;
     }
+
+    /* =====================================================
+       TARJETAS POR PREDIO
+       ===================================================== */
+
+    function mostrarTarjetasPredio(registros) {
+      const grupos = new Map();
+
+      registros.forEach(
+        registro => {
+          const predioCompleto =
+            String(
+              registro.PREDIO ?? ""
+            ).trim();
+
+          const predioVisible =
+            mostrarPredio(
+              predioCompleto
+            );
+
+          if (!grupos.has(predioVisible)) {
+            grupos.set(
+              predioVisible,
+              {
+                predio: predioVisible,
+                cargados: 0,
+                descargados: 0
+              }
+            );
+          }
+
+          const grupo =
+            grupos.get(predioVisible);
+
+          grupo.cargados += 1;
+
+          if (
+            estaDescargado(
+              registro["ESTADO DESCARGA"]
+            )
+          ) {
+            grupo.descargados += 1;
+          }
+        }
+      );
+
+      const predios = [
+        ...grupos.values()
+      ].sort(
+        (a, b) =>
+          a.predio.localeCompare(
+            b.predio,
+            "es"
+          )
+      );
+
+      if (!predios.length) {
+        grillaPredios.innerHTML = `
+          <div class="sin-predios">
+            No hay predios para los filtros seleccionados.
+          </div>
+        `;
+
+        return;
+      }
+
+      grillaPredios.innerHTML =
+        predios.map(
+          item => {
+            const porcentaje =
+              item.cargados > 0
+                ? (
+                    item.descargados /
+                    item.cargados *
+                    100
+                  )
+                : 0;
+
+            return `
+              <article class="tarjeta-predio">
+
+                <div class="nombre-predio">
+                  ${escaparHtml(
+                    item.predio
+                  )}
+                </div>
+
+                <div class="valor-predio">
+                  ${formatoEntero.format(
+                    item.descargados
+                  )}
+                  /
+                  ${formatoEntero.format(
+                    item.cargados
+                  )}
+                </div>
+
+                <div class="leyenda-predio">
+                  Descargados / Cargados
+                </div>
+
+                <div class="porcentaje-predio">
+                  ${porcentaje.toFixed(0)}%
+                </div>
+
+              </article>
+            `;
+          }
+        ).join("");
+    }
+
+    /* ===================================================== */
 
     function actualizarCantidadResumen(cantidad) {
       document.getElementById(
