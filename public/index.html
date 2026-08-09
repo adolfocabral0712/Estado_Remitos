@@ -273,7 +273,9 @@
       color: var(--texto-suave);
     }
 
-    /* ===================================================== */
+    /* =====================================================
+       TABLA RESUMEN
+       ===================================================== */
 
     .panel-resumen {
       overflow: hidden;
@@ -378,6 +380,10 @@
       color: #ffd275;
     }
 
+    /* =====================================================
+       DETALLE
+       ===================================================== */
+
     .contenedor-tabla {
       width: 100%;
       height: auto;
@@ -401,6 +407,47 @@
       border-bottom: 1px solid var(--borde);
       text-align: center;
       white-space: nowrap;
+    }
+
+    /*
+      ENCABEZADOS ORDENABLES
+    */
+
+    .tabla-detalle th.ordenable {
+      cursor: pointer;
+      user-select: none;
+      transition:
+        background 0.15s ease,
+        color 0.15s ease;
+    }
+
+    .tabla-detalle th.ordenable:hover {
+      background: #16314e;
+      color: #ffffff;
+    }
+
+    .tabla-detalle th.orden-activo {
+      color: #ffffff;
+      background: #173653;
+    }
+
+    .encabezado-orden {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .icono-orden {
+      display: inline-block;
+      min-width: 10px;
+      color: #63809c;
+      font-size: 0.7rem;
+      line-height: 1;
+    }
+
+    .orden-activo .icono-orden {
+      color: var(--azul);
     }
 
     .tabla-detalle td {
@@ -757,7 +804,9 @@
 
     </section>
 
-    <!-- ===================================================== -->
+    <!-- =====================================================
+         RESUMEN
+         ===================================================== -->
 
     <section class="panel-resumen">
 
@@ -811,6 +860,10 @@
 
     </section>
 
+    <!-- =====================================================
+         DETALLE DE REGISTROS
+         ===================================================== -->
+
     <section class="panel-tabla">
 
       <div class="encabezado-seccion">
@@ -830,20 +883,114 @@
 
       <div class="contenedor-tabla">
 
-        <table class="tabla-detalle">
+        <table
+          class="tabla-detalle"
+          id="tablaDetalle"
+        >
 
           <thead>
 
             <tr>
-              <th>REMITO MONTE</th>
-              <th>DESTINO</th>
-              <th>PREDIO</th>
-              <th>PRODUCTO</th>
-              <th>VEHÍCULO</th>
-              <th>FIN CARGA</th>
-              <th>OBSERVACIONES</th>
-              <th>NETO</th>
-              <th>ESTADO DESCARGA</th>
+
+              <th
+                class="ordenable"
+                data-columna="REMITO MONTE"
+                data-tipo="numero"
+              >
+                <span class="encabezado-orden">
+                  REMITO MONTE
+                  <span class="icono-orden"></span>
+                </span>
+              </th>
+
+              <th
+                class="ordenable"
+                data-columna="DESTINO"
+                data-tipo="texto"
+              >
+                <span class="encabezado-orden">
+                  DESTINO
+                  <span class="icono-orden"></span>
+                </span>
+              </th>
+
+              <th
+                class="ordenable"
+                data-columna="PREDIO"
+                data-tipo="texto"
+              >
+                <span class="encabezado-orden">
+                  PREDIO
+                  <span class="icono-orden"></span>
+                </span>
+              </th>
+
+              <th
+                class="ordenable"
+                data-columna="PRODUCTO"
+                data-tipo="texto"
+              >
+                <span class="encabezado-orden">
+                  PRODUCTO
+                  <span class="icono-orden"></span>
+                </span>
+              </th>
+
+              <th
+                class="ordenable"
+                data-columna="VEHÍCULO"
+                data-tipo="texto"
+              >
+                <span class="encabezado-orden">
+                  VEHÍCULO
+                  <span class="icono-orden"></span>
+                </span>
+              </th>
+
+              <th
+                class="ordenable"
+                data-columna="FIN CARGA"
+                data-tipo="fecha"
+              >
+                <span class="encabezado-orden">
+                  FIN CARGA
+                  <span class="icono-orden"></span>
+                </span>
+              </th>
+
+              <th
+                class="ordenable"
+                data-columna="OBSERVACIONES"
+                data-tipo="texto"
+              >
+                <span class="encabezado-orden">
+                  OBSERVACIONES
+                  <span class="icono-orden"></span>
+                </span>
+              </th>
+
+              <th
+                class="ordenable"
+                data-columna="YA ENVIADOS.Neto"
+                data-tipo="neto"
+              >
+                <span class="encabezado-orden">
+                  NETO
+                  <span class="icono-orden"></span>
+                </span>
+              </th>
+
+              <th
+                class="ordenable"
+                data-columna="ESTADO DESCARGA"
+                data-tipo="texto"
+              >
+                <span class="encabezado-orden">
+                  ESTADO DESCARGA
+                  <span class="icono-orden"></span>
+                </span>
+              </th>
+
             </tr>
 
           </thead>
@@ -873,10 +1020,20 @@
     const URL_DATOS = "/api/datos";
 
     let todosLosRegistros = [];
+    let registrosFiltradosActuales = [];
 
     let diaSeleccionado = "";
     let destinoSeleccionado = "";
     let estadoSeleccionado = "";
+
+    /*
+      ORDEN ACTUAL DE LA TABLA DETALLE
+
+      Por defecto:
+      FIN CARGA descendente.
+    */
+    let columnaOrden = "FIN CARGA";
+    let direccionOrden = "desc";
 
     const filtroDia =
       document.getElementById("filtroDia");
@@ -904,6 +1061,11 @@
 
     const mensajeError =
       document.getElementById("mensajeError");
+
+    const encabezadosOrdenables =
+      document.querySelectorAll(
+        ".tabla-detalle th.ordenable"
+      );
 
     const formatoNumero = new Intl.NumberFormat(
       "es-UY",
@@ -942,21 +1104,25 @@
     }
 
     function obtenerClaveDia(valor) {
-      const fecha = convertirFecha(valor);
+      const fecha =
+        convertirFecha(valor);
 
       if (!fecha) {
         return "";
       }
 
-      const anio = fecha.getFullYear();
+      const anio =
+        fecha.getFullYear();
 
-      const mes = String(
-        fecha.getMonth() + 1
-      ).padStart(2, "0");
+      const mes =
+        String(
+          fecha.getMonth() + 1
+        ).padStart(2, "0");
 
-      const dia = String(
-        fecha.getDate()
-      ).padStart(2, "0");
+      const dia =
+        String(
+          fecha.getDate()
+        ).padStart(2, "0");
 
       return `${anio}-${mes}-${dia}`;
     }
@@ -966,35 +1132,42 @@
         return "Sin fecha";
       }
 
-      const partes = clave.split("-");
+      const partes =
+        clave.split("-");
 
       return `${partes[2]}/${partes[1]}/${partes[0]}`;
     }
 
     function formatearFechaHora(valor) {
-      const fecha = convertirFecha(valor);
+      const fecha =
+        convertirFecha(valor);
 
       if (!fecha) {
         return valor || "—";
       }
 
-      const dia = String(
-        fecha.getDate()
-      ).padStart(2, "0");
+      const dia =
+        String(
+          fecha.getDate()
+        ).padStart(2, "0");
 
-      const mes = String(
-        fecha.getMonth() + 1
-      ).padStart(2, "0");
+      const mes =
+        String(
+          fecha.getMonth() + 1
+        ).padStart(2, "0");
 
-      const anio = fecha.getFullYear();
+      const anio =
+        fecha.getFullYear();
 
-      const hora = String(
-        fecha.getHours()
-      ).padStart(2, "0");
+      const hora =
+        String(
+          fecha.getHours()
+        ).padStart(2, "0");
 
-      const minutos = String(
-        fecha.getMinutes()
-      ).padStart(2, "0");
+      const minutos =
+        String(
+          fecha.getMinutes()
+        ).padStart(2, "0");
 
       return `${dia}/${mes}/${anio} ${hora}:${minutos}`;
     }
@@ -1010,7 +1183,9 @@
           .toUpperCase();
 
       if (
-        destinoNormalizado.includes("POLO LOGISTICO")
+        destinoNormalizado.includes(
+          "POLO LOGISTICO"
+        )
       ) {
         return "POLO LOGISTICO";
       }
@@ -1065,10 +1240,11 @@
           : 0;
       }
 
-      const numero = Number(
-        String(valor ?? "")
-          .replace(",", ".")
-      );
+      const numero =
+        Number(
+          String(valor ?? "")
+            .replace(",", ".")
+        );
 
       return Number.isFinite(numero)
         ? numero
@@ -1094,10 +1270,249 @@
       );
     }
 
-    async function cargarDatos() {
-      mensajeError.style.display = "none";
+    /* =====================================================
+       ORDENAMIENTO
+       ===================================================== */
 
-      botonActualizar.disabled = true;
+    function normalizarTextoOrden(valor) {
+      return String(valor ?? "")
+        .trim()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toUpperCase();
+    }
+
+    function obtenerValorOrden(
+      registro,
+      columna,
+      tipo
+    ) {
+
+      if (tipo === "neto") {
+        return obtenerNeto(registro);
+      }
+
+      if (tipo === "numero") {
+        const valor =
+          Number(registro[columna]);
+
+        return Number.isFinite(valor)
+          ? valor
+          : -Infinity;
+      }
+
+      if (tipo === "fecha") {
+        const fecha =
+          convertirFecha(
+            registro[columna]
+          );
+
+        return fecha
+          ? fecha.getTime()
+          : 0;
+      }
+
+      /*
+        Para DESTINO usamos el nombre visible.
+      */
+      if (columna === "DESTINO") {
+        return normalizarTextoOrden(
+          mostrarDestino(
+            registro[columna]
+          )
+        );
+      }
+
+      return normalizarTextoOrden(
+        registro[columna]
+      );
+    }
+
+    function obtenerTipoColumna(
+      columna
+    ) {
+      const encabezado =
+        document.querySelector(
+          `.tabla-detalle th[data-columna="${columna}"]`
+        );
+
+      return encabezado
+        ? encabezado.dataset.tipo
+        : "texto";
+    }
+
+    function ordenarRegistros(
+      registros
+    ) {
+      const copia =
+        [...registros];
+
+      if (!columnaOrden) {
+        return copia;
+      }
+
+      const tipo =
+        obtenerTipoColumna(
+          columnaOrden
+        );
+
+      copia.sort(
+        (a, b) => {
+
+          const valorA =
+            obtenerValorOrden(
+              a,
+              columnaOrden,
+              tipo
+            );
+
+          const valorB =
+            obtenerValorOrden(
+              b,
+              columnaOrden,
+              tipo
+            );
+
+          let resultado = 0;
+
+          if (
+            typeof valorA === "number" &&
+            typeof valorB === "number"
+          ) {
+
+            resultado =
+              valorA - valorB;
+
+          } else {
+
+            resultado =
+              String(valorA).localeCompare(
+                String(valorB),
+                "es",
+                {
+                  numeric: true,
+                  sensitivity: "base"
+                }
+              );
+          }
+
+          return direccionOrden === "asc"
+            ? resultado
+            : -resultado;
+        }
+      );
+
+      return copia;
+    }
+
+    function actualizarIndicadoresOrden() {
+
+      encabezadosOrdenables.forEach(
+        encabezado => {
+
+          const icono =
+            encabezado.querySelector(
+              ".icono-orden"
+            );
+
+          encabezado.classList.remove(
+            "orden-activo"
+          );
+
+          icono.textContent = "";
+
+          if (
+            encabezado.dataset.columna ===
+            columnaOrden
+          ) {
+
+            encabezado.classList.add(
+              "orden-activo"
+            );
+
+            icono.textContent =
+              direccionOrden === "asc"
+                ? "▲"
+                : "▼";
+          }
+        }
+      );
+    }
+
+    function configurarOrdenColumnas() {
+
+      encabezadosOrdenables.forEach(
+        encabezado => {
+
+          encabezado.addEventListener(
+            "click",
+            () => {
+
+              const nuevaColumna =
+                encabezado.dataset.columna;
+
+              /*
+                Si hacemos clic nuevamente
+                sobre la misma columna,
+                alternamos asc / desc.
+              */
+              if (
+                columnaOrden === nuevaColumna
+              ) {
+
+                direccionOrden =
+                  direccionOrden === "asc"
+                    ? "desc"
+                    : "asc";
+
+              } else {
+
+                columnaOrden =
+                  nuevaColumna;
+
+                /*
+                  Al seleccionar una nueva columna:
+                  fecha y números comienzan descendente.
+                  texto comienza ascendente.
+                */
+                const tipo =
+                  encabezado.dataset.tipo;
+
+                if (
+                  tipo === "fecha" ||
+                  tipo === "numero" ||
+                  tipo === "neto"
+                ) {
+                  direccionOrden = "desc";
+                } else {
+                  direccionOrden = "asc";
+                }
+              }
+
+              actualizarIndicadoresOrden();
+
+              mostrarTabla(
+                registrosFiltradosActuales
+              );
+            }
+          );
+        }
+      );
+
+      actualizarIndicadoresOrden();
+    }
+
+    /* =====================================================
+       CARGA DE DATOS
+       ===================================================== */
+
+    async function cargarDatos() {
+      mensajeError.style.display =
+        "none";
+
+      botonActualizar.disabled =
+        true;
+
       botonActualizar.textContent =
         "Actualizando...";
 
@@ -1130,12 +1545,14 @@
       `;
 
       try {
-        const respuesta = await fetch(
-          `${URL_DATOS}?_=${Date.now()}`,
-          {
-            cache: "no-store"
-          }
-        );
+
+        const respuesta =
+          await fetch(
+            `${URL_DATOS}?_=${Date.now()}`,
+            {
+              cache: "no-store"
+            }
+          );
 
         if (!respuesta.ok) {
           throw new Error(
@@ -1146,12 +1563,15 @@
         const texto =
           await respuesta.text();
 
-        const datos = JSON.parse(
-          corregirJson(texto)
-        );
+        const datos =
+          JSON.parse(
+            corregirJson(texto)
+          );
 
         todosLosRegistros =
-          Array.isArray(datos.registros)
+          Array.isArray(
+            datos.registros
+          )
             ? datos.registros
             : [];
 
@@ -1172,9 +1592,12 @@
         aplicarFiltros();
 
       } catch (error) {
-        todosLosRegistros = [];
 
-        mensajeError.style.display = "block";
+        todosLosRegistros = [];
+        registrosFiltradosActuales = [];
+
+        mensajeError.style.display =
+          "block";
 
         mensajeError.innerHTML = `
           <strong>
@@ -1224,13 +1647,21 @@
         actualizarCantidadResumen(0);
 
       } finally {
-        botonActualizar.disabled = false;
+
+        botonActualizar.disabled =
+          false;
+
         botonActualizar.textContent =
           "Actualizar datos";
       }
     }
 
+    /* =====================================================
+       FILTROS
+       ===================================================== */
+
     function construirFiltroDias() {
+
       const dias = [
         ...new Set(
           todosLosRegistros
@@ -1249,7 +1680,9 @@
 
       if (
         diaSeleccionado &&
-        !dias.includes(diaSeleccionado)
+        !dias.includes(
+          diaSeleccionado
+        )
       ) {
         diaSeleccionado = "";
       }
@@ -1276,15 +1709,18 @@
         )
       ].join("");
 
-      filtroDia.onchange = () => {
-        diaSeleccionado =
-          filtroDia.value || "";
+      filtroDia.onchange =
+        () => {
 
-        aplicarFiltros();
-      };
+          diaSeleccionado =
+            filtroDia.value || "";
+
+          aplicarFiltros();
+        };
     }
 
     function construirFiltroDestinos() {
+
       const destinos = [
         ...new Set(
           todosLosRegistros
@@ -1298,10 +1734,11 @@
         )
       ].sort(
         (a, b) =>
-          mostrarDestino(a).localeCompare(
-            mostrarDestino(b),
-            "es"
-          )
+          mostrarDestino(a)
+            .localeCompare(
+              mostrarDestino(b),
+              "es"
+            )
       );
 
       if (
@@ -1337,29 +1774,37 @@
         )
       ].join("");
 
-      filtroDestino.onchange = () => {
-        destinoSeleccionado =
-          filtroDestino.value || "";
+      filtroDestino.onchange =
+        () => {
 
-        aplicarFiltros();
-      };
+          destinoSeleccionado =
+            filtroDestino.value || "";
+
+          aplicarFiltros();
+        };
     }
 
     function construirFiltroEstados() {
+
       const estados = [
         ...new Set(
           todosLosRegistros
             .map(
               registro =>
                 String(
-                  registro["ESTADO DESCARGA"] ?? ""
+                  registro[
+                    "ESTADO DESCARGA"
+                  ] ?? ""
                 ).trim()
             )
             .filter(Boolean)
         )
       ].sort(
         (a, b) =>
-          a.localeCompare(b, "es")
+          a.localeCompare(
+            b,
+            "es"
+          )
       );
 
       if (
@@ -1393,18 +1838,22 @@
         )
       ].join("");
 
-      filtroEstado.onchange = () => {
-        estadoSeleccionado =
-          filtroEstado.value || "";
+      filtroEstado.onchange =
+        () => {
 
-        aplicarFiltros();
-      };
+          estadoSeleccionado =
+            filtroEstado.value || "";
+
+          aplicarFiltros();
+        };
     }
 
     function aplicarFiltros() {
+
       const registrosFiltrados =
         todosLosRegistros.filter(
           registro => {
+
             const coincideDia =
               !diaSeleccionado ||
               obtenerClaveDia(
@@ -1420,8 +1869,11 @@
             const coincideEstado =
               !estadoSeleccionado ||
               String(
-                registro["ESTADO DESCARGA"] ?? ""
-              ).trim() === estadoSeleccionado;
+                registro[
+                  "ESTADO DESCARGA"
+                ] ?? ""
+              ).trim() ===
+                estadoSeleccionado;
 
             return (
               coincideDia &&
@@ -1431,21 +1883,8 @@
           }
         );
 
-      registrosFiltrados.sort(
-        (a, b) => {
-          const fechaA =
-            convertirFecha(
-              a["FIN CARGA"]
-            )?.getTime() || 0;
-
-          const fechaB =
-            convertirFecha(
-              b["FIN CARGA"]
-            )?.getTime() || 0;
-
-          return fechaB - fechaA;
-        }
-      );
+      registrosFiltradosActuales =
+        registrosFiltrados;
 
       actualizarTarjetas(
         registrosFiltrados
@@ -1464,12 +1903,21 @@
       );
     }
 
-    function actualizarTarjetas(registros) {
+    /* =====================================================
+       TARJETAS PRINCIPALES
+       ===================================================== */
+
+    function actualizarTarjetas(
+      registros
+    ) {
+
       const pendientes =
         registros.filter(
           registro =>
             !estaDescargado(
-              registro["ESTADO DESCARGA"]
+              registro[
+                "ESTADO DESCARGA"
+              ]
             )
         );
 
@@ -1499,11 +1947,16 @@
        TARJETAS POR PREDIO
        ===================================================== */
 
-    function mostrarTarjetasPredio(registros) {
-      const grupos = new Map();
+    function mostrarTarjetasPredio(
+      registros
+    ) {
+
+      const grupos =
+        new Map();
 
       registros.forEach(
         registro => {
+
           const predioCompleto =
             String(
               registro.PREDIO ?? ""
@@ -1514,25 +1967,37 @@
               predioCompleto
             );
 
-          if (!grupos.has(predioVisible)) {
+          if (
+            !grupos.has(
+              predioVisible
+            )
+          ) {
+
             grupos.set(
               predioVisible,
               {
-                predio: predioVisible,
+                predio:
+                  predioVisible,
+
                 cargados: 0,
+
                 descargados: 0
               }
             );
           }
 
           const grupo =
-            grupos.get(predioVisible);
+            grupos.get(
+              predioVisible
+            );
 
           grupo.cargados += 1;
 
           if (
             estaDescargado(
-              registro["ESTADO DESCARGA"]
+              registro[
+                "ESTADO DESCARGA"
+              ]
             )
           ) {
             grupo.descargados += 1;
@@ -1551,6 +2016,7 @@
       );
 
       if (!predios.length) {
+
         grillaPredios.innerHTML = `
           <div class="sin-predios">
             No hay predios para los filtros seleccionados.
@@ -1563,6 +2029,7 @@
       grillaPredios.innerHTML =
         predios.map(
           item => {
+
             const porcentaje =
               item.cargados > 0
                 ? (
@@ -1605,20 +2072,32 @@
         ).join("");
     }
 
-    /* ===================================================== */
+    /* =====================================================
+       RESUMEN
+       ===================================================== */
 
-    function actualizarCantidadResumen(cantidad) {
+    function actualizarCantidadResumen(
+      cantidad
+    ) {
+
       document.getElementById(
         "cantidadResumen"
       ).textContent =
-        `${formatoEntero.format(cantidad)} filas`;
+        `${formatoEntero.format(
+          cantidad
+        )} filas`;
     }
 
-    function crearResumen(registros) {
-      const grupos = new Map();
+    function crearResumen(
+      registros
+    ) {
+
+      const grupos =
+        new Map();
 
       registros.forEach(
         registro => {
+
           const dia =
             obtenerClaveDia(
               registro["FIN CARGA"]
@@ -1630,17 +2109,23 @@
             ).trim();
 
           const destinoVisible =
-            mostrarDestino(destinoOriginal);
+            mostrarDestino(
+              destinoOriginal
+            );
 
           const clave =
             `${dia}|||${destinoVisible}`;
 
-          if (!grupos.has(clave)) {
+          if (
+            !grupos.has(clave)
+          ) {
+
             grupos.set(
               clave,
               {
                 dia,
-                destino: destinoVisible,
+                destino:
+                  destinoVisible,
                 total: 0,
                 descargados: 0,
                 pendientes: 0
@@ -1655,11 +2140,16 @@
 
           if (
             estaDescargado(
-              registro["ESTADO DESCARGA"]
+              registro[
+                "ESTADO DESCARGA"
+              ]
             )
           ) {
+
             grupo.descargados += 1;
+
           } else {
+
             grupo.pendientes += 1;
           }
         }
@@ -1669,8 +2159,14 @@
         ...grupos.values()
       ].sort(
         (a, b) => {
-          if (a.dia !== b.dia) {
-            return b.dia.localeCompare(a.dia);
+
+          if (
+            a.dia !== b.dia
+          ) {
+
+            return b.dia.localeCompare(
+              a.dia
+            );
           }
 
           return a.destino.localeCompare(
@@ -1681,15 +2177,21 @@
       );
     }
 
-    function mostrarResumen(registros) {
+    function mostrarResumen(
+      registros
+    ) {
+
       const resumen =
-        crearResumen(registros);
+        crearResumen(
+          registros
+        );
 
       actualizarCantidadResumen(
         resumen.length
       );
 
       if (!resumen.length) {
+
         cuerpoResumen.innerHTML = `
           <tr>
             <td
@@ -1711,9 +2213,12 @@
 
               <td>
                 ${
-                  fila.dia === "SIN_FECHA"
+                  fila.dia ===
+                  "SIN_FECHA"
                     ? "Sin fecha"
-                    : formatearDia(fila.dia)
+                    : formatearDia(
+                        fila.dia
+                      )
                 }
               </td>
 
@@ -1758,8 +2263,25 @@
         ).join("");
     }
 
-    function mostrarTabla(registros) {
-      if (!registros.length) {
+    /* =====================================================
+       DETALLE
+       ===================================================== */
+
+    function mostrarTabla(
+      registros
+    ) {
+
+      const registrosOrdenados =
+        ordenarRegistros(
+          registros
+        );
+
+      actualizarIndicadoresOrden();
+
+      if (
+        !registrosOrdenados.length
+      ) {
+
         cuerpoTabla.innerHTML = `
           <tr>
             <td
@@ -1775,15 +2297,20 @@
       }
 
       cuerpoTabla.innerHTML =
-        registros.map(
+        registrosOrdenados.map(
           registro => {
+
             const textoEstado =
               String(
-                registro["ESTADO DESCARGA"] ?? "—"
+                registro[
+                  "ESTADO DESCARGA"
+                ] ?? "—"
               );
 
             const claseEstado =
-              estaDescargado(textoEstado)
+              estaDescargado(
+                textoEstado
+              )
                 ? "estado-descargado"
                 : "estado-pendiente";
 
@@ -1794,7 +2321,8 @@
               observaciones == null ||
               String(observaciones)
                 .trim()
-                .toLowerCase() === "nan"
+                .toLowerCase() ===
+                  "nan"
             ) {
               observaciones = "—";
             }
@@ -1804,7 +2332,9 @@
 
                 <td>
                   ${escaparHtml(
-                    registro["REMITO MONTE"] ?? "—"
+                    registro[
+                      "REMITO MONTE"
+                    ] ?? "—"
                   )}
                 </td>
 
@@ -1818,26 +2348,32 @@
 
                 <td>
                   ${escaparHtml(
-                    registro.PREDIO ?? "—"
+                    registro.PREDIO ??
+                    "—"
                   )}
                 </td>
 
                 <td>
                   ${escaparHtml(
-                    registro.PRODUCTO ?? "—"
+                    registro.PRODUCTO ??
+                    "—"
                   )}
                 </td>
 
                 <td>
                   ${escaparHtml(
-                    registro["VEHÍCULO"] ?? "—"
+                    registro[
+                      "VEHÍCULO"
+                    ] ?? "—"
                   )}
                 </td>
 
                 <td>
                   ${escaparHtml(
                     formatearFechaHora(
-                      registro["FIN CARGA"]
+                      registro[
+                        "FIN CARGA"
+                      ]
                     )
                   )}
                 </td>
@@ -1850,7 +2386,9 @@
 
                 <td>
                   ${formatoNumero.format(
-                    obtenerNeto(registro)
+                    obtenerNeto(
+                      registro
+                    )
                   )}
                 </td>
 
@@ -1870,9 +2408,14 @@
         ).join("");
     }
 
+    /* =====================================================
+       EVENTOS
+       ===================================================== */
+
     botonLimpiar.addEventListener(
       "click",
       () => {
+
         diaSeleccionado = "";
         destinoSeleccionado = "";
         estadoSeleccionado = "";
@@ -1890,7 +2433,16 @@
       cargarDatos
     );
 
+    /*
+      Activa clic en los encabezados.
+    */
+    configurarOrdenColumnas();
+
+    /*
+      Primera carga.
+    */
     cargarDatos();
+
   </script>
 
 </body>
