@@ -94,6 +94,10 @@
       cursor: wait;
     }
 
+    /* =====================================================
+       TARJETAS SUPERIORES
+       ===================================================== */
+
     .tarjetas {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -140,63 +144,123 @@
       text-align: center;
     }
 
+    /* =====================================================
+       FILTROS EN TARJETAS
+       ===================================================== */
+
     .filtros {
-      padding: 16px;
+      padding: 17px;
       margin-bottom: 14px;
     }
 
-    .grilla-filtros {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-      align-items: end;
+    .bloque-filtro {
+      margin-bottom: 18px;
     }
 
-    .grupo-filtro label {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--texto-suave);
-      font-size: 0.82rem;
-      font-weight: 700;
+    .bloque-filtro:last-of-type {
+      margin-bottom: 14px;
+    }
+
+    .titulo-filtro {
+      margin-bottom: 9px;
+      color: #9fc0df;
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
       text-align: center;
     }
 
-    .selector {
-      width: 100%;
-      height: 42px;
-      border: 1px solid var(--borde);
-      background: #091727;
-      color: var(--texto);
-      border-radius: 9px;
-      padding: 0 12px;
-      font-size: 0.88rem;
-      outline: none;
-      cursor: pointer;
-      text-align: center;
+    .opciones-filtro {
+      display: grid;
+      grid-template-columns:
+        repeat(auto-fit, minmax(145px, 1fr));
+      gap: 8px;
     }
 
-    .selector:focus {
+    .tarjeta-filtro {
+      min-height: 43px;
+
+      padding: 9px 12px;
+
+      border: 1px solid var(--borde);
+      border-radius: 9px;
+
+      background: #091727;
+      color: #d9e6f3;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      text-align: center;
+
+      font-family: inherit;
+      font-size: 0.79rem;
+      font-weight: 700;
+
+      cursor: pointer;
+
+      transition:
+        border-color 0.15s ease,
+        background 0.15s ease,
+        color 0.15s ease,
+        transform 0.15s ease;
+    }
+
+    .tarjeta-filtro:hover {
+      border-color: #3c6d98;
+      background: #10243a;
+    }
+
+    .tarjeta-filtro:active {
+      transform: translateY(1px);
+    }
+
+    .tarjeta-filtro.activa {
+      background: rgba(45, 168, 255, 0.16);
       border-color: var(--azul);
-      box-shadow: 0 0 0 3px var(--azul-suave);
+      color: #ffffff;
+
+      box-shadow:
+        inset 0 0 0 1px rgba(45, 168, 255, 0.14),
+        0 0 14px rgba(45, 168, 255, 0.08);
+    }
+
+    .tarjeta-filtro.todos {
+      color: #a7bdd1;
+    }
+
+    .tarjeta-filtro.todos.activa {
+      color: #ffffff;
     }
 
     .boton-limpiar {
-      grid-column: 1 / -1;
-      justify-self: center;
+      display: block;
+
       width: min(100%, 420px);
       height: 42px;
+
+      margin: 4px auto 0;
+
       border: 1px solid var(--borde);
       background: transparent;
       color: var(--texto);
+
       border-radius: 9px;
+
       font-weight: 700;
       cursor: pointer;
     }
 
     .boton-limpiar:hover {
       border-color: var(--azul);
+      background: rgba(45, 168, 255, 0.05);
     }
+
+    /* =====================================================
+       TARJETAS POR PREDIO
+       ===================================================== */
 
     .panel-predios {
       margin-bottom: 14px;
@@ -211,15 +275,18 @@
 
     .grilla-predios {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns:
+        repeat(auto-fit, minmax(180px, 1fr));
       gap: 10px;
     }
 
     .tarjeta-predio {
       min-height: 112px;
+
       background: #0a1929;
       border: 1px solid var(--borde);
       border-radius: 11px;
+
       padding: 13px 10px;
 
       display: flex;
@@ -269,6 +336,10 @@
       color: var(--texto-suave);
     }
 
+    /* =====================================================
+       SECCIONES
+       ===================================================== */
+
     .panel-resumen {
       overflow: hidden;
       margin-bottom: 14px;
@@ -296,6 +367,10 @@
       font-size: 0.86rem;
     }
 
+    /* =====================================================
+       TABLA RESUMEN
+       ===================================================== */
+
     .contenedor-resumen {
       overflow-x: auto;
       overflow-y: visible;
@@ -304,16 +379,21 @@
     .tabla-resumen {
       width: 100%;
       min-width: 700px;
+
       border-collapse: collapse;
       table-layout: fixed;
+
       font-size: 0.82rem;
     }
 
     .tabla-resumen th {
       padding: 11px 8px;
+
       background: #10243a;
       color: #bdd0e2;
+
       border-bottom: 1px solid var(--borde);
+
       text-align: center;
       white-space: normal;
       line-height: 1.25;
@@ -321,7 +401,10 @@
 
     .tabla-resumen td {
       padding: 10px 8px;
-      border-bottom: 1px solid rgba(32, 54, 80, 0.65);
+
+      border-bottom:
+        1px solid rgba(32, 54, 80, 0.65);
+
       text-align: center;
       vertical-align: middle;
     }
@@ -372,10 +455,15 @@
       color: #ffd275;
     }
 
+    /* =====================================================
+       TABLA DETALLE
+       ===================================================== */
+
     .contenedor-tabla {
       width: 100%;
       height: auto;
       max-height: none;
+
       overflow-x: auto;
       overflow-y: visible;
     }
@@ -383,16 +471,21 @@
     .tabla-detalle {
       width: 100%;
       min-width: 1140px;
+
       border-collapse: collapse;
       table-layout: auto;
+
       font-size: 0.78rem;
     }
 
     .tabla-detalle th {
       padding: 10px 7px;
+
       background: #10243a;
       color: #bdd0e2;
+
       border-bottom: 1px solid var(--borde);
+
       text-align: center;
       white-space: nowrap;
     }
@@ -400,6 +493,7 @@
     .tabla-detalle th.ordenable {
       cursor: pointer;
       user-select: none;
+
       transition:
         background 0.15s ease,
         color 0.15s ease;
@@ -425,7 +519,9 @@
     .icono-orden {
       display: inline-block;
       min-width: 10px;
+
       color: #63809c;
+
       font-size: 0.7rem;
       line-height: 1;
     }
@@ -436,34 +532,38 @@
 
     .tabla-detalle td {
       padding: 9px 7px;
-      border-bottom: 1px solid rgba(32, 54, 80, 0.65);
+
+      border-bottom:
+        1px solid rgba(32, 54, 80, 0.65);
+
       text-align: center;
       vertical-align: middle;
+
       line-height: 1.28;
     }
 
-    /* 1 - REMITO */
+    /* 1 REMITO */
     .tabla-detalle th:nth-child(1),
     .tabla-detalle td:nth-child(1) {
       width: 88px;
       min-width: 88px;
     }
 
-    /* 2 - DESTINO */
+    /* 2 DESTINO */
     .tabla-detalle th:nth-child(2),
     .tabla-detalle td:nth-child(2) {
       width: 145px;
       min-width: 125px;
     }
 
-    /* 3 - PREDIO */
+    /* 3 PREDIO */
     .tabla-detalle th:nth-child(3),
     .tabla-detalle td:nth-child(3) {
       width: 170px;
       min-width: 140px;
     }
 
-    /* 4 - VEHICULO */
+    /* 4 VEHICULO */
     .tabla-detalle th:nth-child(4),
     .tabla-detalle td:nth-child(4) {
       width: 90px;
@@ -471,14 +571,14 @@
       white-space: nowrap;
     }
 
-    /* 5 - PRODUCTO */
+    /* 5 PRODUCTO */
     .tabla-detalle th:nth-child(5),
     .tabla-detalle td:nth-child(5) {
       width: 235px;
       min-width: 195px;
     }
 
-    /* 6 - FIN CARGA */
+    /* 6 FIN CARGA */
     .tabla-detalle th:nth-child(6),
     .tabla-detalle td:nth-child(6) {
       width: 126px;
@@ -486,7 +586,7 @@
       white-space: nowrap;
     }
 
-    /* 7 - NETO */
+    /* 7 NETO */
     .tabla-detalle th:nth-child(7),
     .tabla-detalle td:nth-child(7) {
       width: 65px;
@@ -494,7 +594,7 @@
       white-space: nowrap;
     }
 
-    /* 8 - ESTADO */
+    /* 8 ESTADO */
     .tabla-detalle th:nth-child(8),
     .tabla-detalle td:nth-child(8) {
       width: 118px;
@@ -502,7 +602,7 @@
       white-space: nowrap;
     }
 
-    /* 9 - GPS */
+    /* 9 GPS */
     .tabla-detalle th:nth-child(9),
     .tabla-detalle td:nth-child(9) {
       width: 170px;
@@ -527,8 +627,10 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+
       border-radius: 999px;
       padding: 5px 9px;
+
       font-size: 0.75rem;
       font-weight: 800;
       white-space: nowrap;
@@ -558,24 +660,22 @@
 
     .error {
       display: none;
+
       padding: 16px;
       margin-bottom: 14px;
-      border-color: rgba(239, 107, 115, 0.55);
+
+      border-color:
+        rgba(239, 107, 115, 0.55);
+
       color: #ffc2c6;
     }
 
-    @media (max-width: 920px) {
-      .grilla-filtros {
-        grid-template-columns: 1fr;
-      }
+    /* =====================================================
+       RESPONSIVE
+       ===================================================== */
 
-      .boton-limpiar {
-        grid-column: 1;
-        width: 100%;
-      }
-    }
+    @media (max-width: 700px) {
 
-    @media (max-width: 560px) {
       .contenedor {
         width: calc(100% - 18px);
         padding-top: 15px;
@@ -607,8 +707,20 @@
         font-size: 1.35rem;
       }
 
+      .opciones-filtro {
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
+      }
+
+      .tarjeta-filtro {
+        min-height: 40px;
+        padding: 8px 6px;
+        font-size: 0.72rem;
+      }
+
       .grilla-predios {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr));
         gap: 8px;
       }
 
@@ -647,6 +759,7 @@
         padding: 8px 6px;
       }
     }
+
   </style>
 </head>
 
@@ -654,10 +767,17 @@
 
   <main class="contenedor">
 
+    <!-- =====================================================
+         ENCABEZADO
+         ===================================================== -->
+
     <header class="encabezado">
 
       <div>
-        <h1>Estado de descarga de remitos</h1>
+
+        <h1>
+          Estado de descarga de remitos
+        </h1>
 
         <div
           class="actualizado"
@@ -665,6 +785,7 @@
         >
           Cargando información...
         </div>
+
       </div>
 
       <button
@@ -682,9 +803,14 @@
       id="mensajeError"
     ></div>
 
+    <!-- =====================================================
+         TARJETAS PRINCIPALES
+         ===================================================== -->
+
     <section class="tarjetas">
 
       <article class="tarjeta">
+
         <div class="tarjeta-titulo">
           Registros filtrados
         </div>
@@ -695,9 +821,11 @@
         >
           0
         </div>
+
       </article>
 
       <article class="tarjeta">
+
         <div class="tarjeta-titulo">
           Remitos falta descargar
         </div>
@@ -708,58 +836,72 @@
         >
           0
         </div>
+
       </article>
 
     </section>
 
+    <!-- =====================================================
+         FILTROS EN TARJETAS
+         ===================================================== -->
+
     <section class="filtros">
 
-      <div class="grilla-filtros">
+      <div class="bloque-filtro">
 
-        <div class="grupo-filtro">
-          <label for="filtroDia">
-            Días
-          </label>
-
-          <select
-            class="selector"
-            id="filtroDia"
-          ></select>
+        <div class="titulo-filtro">
+          Días
         </div>
 
-        <div class="grupo-filtro">
-          <label for="filtroDestino">
-            Destino
-          </label>
-
-          <select
-            class="selector"
-            id="filtroDestino"
-          ></select>
-        </div>
-
-        <div class="grupo-filtro">
-          <label for="filtroEstado">
-            Estado de descarga
-          </label>
-
-          <select
-            class="selector"
-            id="filtroEstado"
-          ></select>
-        </div>
-
-        <button
-          class="boton-limpiar"
-          id="botonLimpiar"
-          type="button"
+        <div
+          class="opciones-filtro"
+          id="filtroDias"
         >
-          Limpiar filtros
-        </button>
+        </div>
 
       </div>
 
+      <div class="bloque-filtro">
+
+        <div class="titulo-filtro">
+          Destino
+        </div>
+
+        <div
+          class="opciones-filtro"
+          id="filtroDestinos"
+        >
+        </div>
+
+      </div>
+
+      <div class="bloque-filtro">
+
+        <div class="titulo-filtro">
+          Estado de descarga
+        </div>
+
+        <div
+          class="opciones-filtro"
+          id="filtroEstados"
+        >
+        </div>
+
+      </div>
+
+      <button
+        class="boton-limpiar"
+        id="botonLimpiar"
+        type="button"
+      >
+        Limpiar filtros
+      </button>
+
     </section>
+
+    <!-- =====================================================
+         PREDIOS
+         ===================================================== -->
 
     <section class="panel-predios">
 
@@ -771,12 +913,18 @@
         class="grilla-predios"
         id="grillaPredios"
       >
+
         <div class="sin-predios">
           Cargando predios...
         </div>
+
       </div>
 
     </section>
+
+    <!-- =====================================================
+         RESUMEN
+         ===================================================== -->
 
     <section class="panel-resumen">
 
@@ -800,6 +948,7 @@
         <table class="tabla-resumen">
 
           <thead>
+
             <tr>
               <th>DÍA</th>
               <th>DESTINO</th>
@@ -807,9 +956,11 @@
               <th>DESCARGÓ</th>
               <th>FALTA DESCARGAR</th>
             </tr>
+
           </thead>
 
           <tbody id="cuerpoResumen">
+
             <tr>
               <td
                 colspan="5"
@@ -818,6 +969,7 @@
                 Cargando resumen...
               </td>
             </tr>
+
           </tbody>
 
         </table>
@@ -825,6 +977,10 @@
       </div>
 
     </section>
+
+    <!-- =====================================================
+         DETALLE
+         ===================================================== -->
 
     <section class="panel-tabla">
 
@@ -958,14 +1114,18 @@
           </thead>
 
           <tbody id="cuerpoTabla">
+
             <tr>
+
               <td
                 colspan="9"
                 class="cargando"
               >
                 Cargando datos...
               </td>
+
             </tr>
+
           </tbody>
 
         </table>
@@ -977,6 +1137,11 @@
   </main>
 
   <script>
+
+    /* =====================================================
+       CONFIGURACIÓN
+       ===================================================== */
+
     const URL_DATOS = "/api/datos";
 
     let todosLosRegistros = [];
@@ -989,14 +1154,14 @@
     let columnaOrden = "FIN CARGA";
     let direccionOrden = "desc";
 
-    const filtroDia =
-      document.getElementById("filtroDia");
+    const filtroDias =
+      document.getElementById("filtroDias");
 
-    const filtroDestino =
-      document.getElementById("filtroDestino");
+    const filtroDestinos =
+      document.getElementById("filtroDestinos");
 
-    const filtroEstado =
-      document.getElementById("filtroEstado");
+    const filtroEstados =
+      document.getElementById("filtroEstados");
 
     const botonLimpiar =
       document.getElementById("botonLimpiar");
@@ -1038,7 +1203,12 @@
         }
       );
 
+    /* =====================================================
+       UTILIDADES
+       ===================================================== */
+
     function corregirJson(texto) {
+
       return texto.replace(
         /(-?\d+)\.(\s*[,}\]])/g,
         "$1$2"
@@ -1099,7 +1269,11 @@
       const partes =
         clave.split("-");
 
-      return `${partes[2]}/${partes[1]}/${partes[0]}`;
+      return (
+        `${partes[2]}/` +
+        `${partes[1]}/` +
+        `${partes[0]}`
+      );
     }
 
     function formatearFechaHora(valor) {
@@ -1134,7 +1308,10 @@
           fecha.getMinutes()
         ).padStart(2, "0");
 
-      return `${dia}/${mes}/${anio} ${hora}:${minutos}`;
+      return (
+        `${dia}/${mes}/${anio} ` +
+        `${hora}:${minutos}`
+      );
     }
 
     function mostrarDestino(valor) {
@@ -1156,6 +1333,7 @@
           "POLO LOGISTICO"
         )
       ) {
+
         return "POLO LOGISTICO";
       }
 
@@ -1170,6 +1348,7 @@
           )
         )
       ) {
+
         return "UPM - PDT";
       }
 
@@ -1188,7 +1367,10 @@
       const partes =
         texto.split(" - ");
 
-      return partes[0].trim() || texto;
+      return (
+        partes[0].trim() ||
+        texto
+      );
     }
 
     function mostrarGPS(valor) {
@@ -1197,6 +1379,7 @@
         valor === null ||
         valor === undefined
       ) {
+
         return "—";
       }
 
@@ -1208,6 +1391,7 @@
         texto.toLowerCase() === "nan" ||
         texto.toLowerCase() === "null"
       ) {
+
         return "—";
       }
 
@@ -1273,6 +1457,263 @@
       );
     }
 
+    /* =====================================================
+       FILTROS COMO TARJETAS
+       ===================================================== */
+
+    function crearBotonFiltro(
+      texto,
+      valor,
+      activo,
+      callback,
+      esTodos = false
+    ) {
+
+      const boton =
+        document.createElement(
+          "button"
+        );
+
+      boton.type = "button";
+
+      boton.className =
+        "tarjeta-filtro" +
+        (activo ? " activa" : "") +
+        (esTodos ? " todos" : "");
+
+      boton.textContent =
+        texto;
+
+      boton.addEventListener(
+        "click",
+        () => callback(valor)
+      );
+
+      return boton;
+    }
+
+    function construirFiltroDias() {
+
+      const dias = [
+        ...new Set(
+          todosLosRegistros
+            .map(
+              registro =>
+                obtenerClaveDia(
+                  registro["FIN CARGA"]
+                )
+            )
+            .filter(Boolean)
+        )
+      ].sort(
+        (a, b) =>
+          b.localeCompare(a)
+      );
+
+      if (
+        diaSeleccionado &&
+        !dias.includes(
+          diaSeleccionado
+        )
+      ) {
+
+        diaSeleccionado = "";
+      }
+
+      filtroDias.innerHTML = "";
+
+      filtroDias.appendChild(
+        crearBotonFiltro(
+          "Todos los días",
+          "",
+          diaSeleccionado === "",
+          valor => {
+
+            diaSeleccionado =
+              valor;
+
+            construirFiltroDias();
+            aplicarFiltros();
+          },
+          true
+        )
+      );
+
+      dias.forEach(
+        dia => {
+
+          filtroDias.appendChild(
+            crearBotonFiltro(
+              formatearDia(dia),
+              dia,
+              diaSeleccionado === dia,
+              valor => {
+
+                diaSeleccionado =
+                  valor;
+
+                construirFiltroDias();
+                aplicarFiltros();
+              }
+            )
+          );
+        }
+      );
+    }
+
+    function construirFiltroDestinos() {
+
+      const destinos = [
+        ...new Set(
+          todosLosRegistros
+            .map(
+              registro =>
+                String(
+                  registro.DESTINO ?? ""
+                ).trim()
+            )
+            .filter(Boolean)
+        )
+      ].sort(
+        (a, b) =>
+          mostrarDestino(a)
+            .localeCompare(
+              mostrarDestino(b),
+              "es"
+            )
+      );
+
+      if (
+        destinoSeleccionado &&
+        !destinos.includes(
+          destinoSeleccionado
+        )
+      ) {
+
+        destinoSeleccionado = "";
+      }
+
+      filtroDestinos.innerHTML = "";
+
+      filtroDestinos.appendChild(
+        crearBotonFiltro(
+          "Todos los destinos",
+          "",
+          destinoSeleccionado === "",
+          valor => {
+
+            destinoSeleccionado =
+              valor;
+
+            construirFiltroDestinos();
+            aplicarFiltros();
+          },
+          true
+        )
+      );
+
+      destinos.forEach(
+        destino => {
+
+          filtroDestinos.appendChild(
+            crearBotonFiltro(
+              mostrarDestino(destino),
+              destino,
+              destinoSeleccionado ===
+                destino,
+              valor => {
+
+                destinoSeleccionado =
+                  valor;
+
+                construirFiltroDestinos();
+                aplicarFiltros();
+              }
+            )
+          );
+        }
+      );
+    }
+
+    function construirFiltroEstados() {
+
+      const estados = [
+        ...new Set(
+          todosLosRegistros
+            .map(
+              registro =>
+                String(
+                  registro[
+                    "ESTADO DESCARGA"
+                  ] ?? ""
+                ).trim()
+            )
+            .filter(Boolean)
+        )
+      ].sort(
+        (a, b) =>
+          a.localeCompare(
+            b,
+            "es"
+          )
+      );
+
+      if (
+        estadoSeleccionado &&
+        !estados.includes(
+          estadoSeleccionado
+        )
+      ) {
+
+        estadoSeleccionado = "";
+      }
+
+      filtroEstados.innerHTML = "";
+
+      filtroEstados.appendChild(
+        crearBotonFiltro(
+          "Todos los estados",
+          "",
+          estadoSeleccionado === "",
+          valor => {
+
+            estadoSeleccionado =
+              valor;
+
+            construirFiltroEstados();
+            aplicarFiltros();
+          },
+          true
+        )
+      );
+
+      estados.forEach(
+        estado => {
+
+          filtroEstados.appendChild(
+            crearBotonFiltro(
+              estado,
+              estado,
+              estadoSeleccionado ===
+                estado,
+              valor => {
+
+                estadoSeleccionado =
+                  valor;
+
+                construirFiltroEstados();
+                aplicarFiltros();
+              }
+            )
+          );
+        }
+      );
+    }
+
+    /* =====================================================
+       ORDENAMIENTO DETALLE
+       ===================================================== */
+
     function normalizarTextoOrden(valor) {
 
       return String(valor ?? "")
@@ -1291,11 +1732,16 @@
       tipo
     ) {
 
-      if (tipo === "neto") {
+      if (
+        tipo === "neto"
+      ) {
+
         return obtenerNeto(registro);
       }
 
-      if (tipo === "numero") {
+      if (
+        tipo === "numero"
+      ) {
 
         const valor =
           Number(
@@ -1307,7 +1753,9 @@
           : -Infinity;
       }
 
-      if (tipo === "fecha") {
+      if (
+        tipo === "fecha"
+      ) {
 
         const fecha =
           convertirFecha(
@@ -1385,8 +1833,10 @@
           let resultado = 0;
 
           if (
-            typeof valorA === "number" &&
-            typeof valorB === "number"
+            typeof valorA ===
+              "number" &&
+            typeof valorB ===
+              "number"
           ) {
 
             resultado =
@@ -1406,9 +1856,11 @@
                 );
           }
 
-          return direccionOrden === "asc"
-            ? resultado
-            : -resultado;
+          return (
+            direccionOrden === "asc"
+              ? resultado
+              : -resultado
+          );
         }
       );
 
@@ -1485,11 +1937,13 @@
                   tipo === "neto"
                 ) {
 
-                  direccionOrden = "desc";
+                  direccionOrden =
+                    "desc";
 
                 } else {
 
-                  direccionOrden = "asc";
+                  direccionOrden =
+                    "asc";
                 }
               }
 
@@ -1506,6 +1960,10 @@
       actualizarIndicadoresOrden();
     }
 
+    /* =====================================================
+       CARGA
+       ===================================================== */
+
     async function cargarDatos() {
 
       mensajeError.style.display =
@@ -1516,34 +1974,6 @@
 
       botonActualizar.textContent =
         "Actualizando...";
-
-      grillaPredios.innerHTML = `
-        <div class="sin-predios">
-          Cargando predios...
-        </div>
-      `;
-
-      cuerpoResumen.innerHTML = `
-        <tr>
-          <td
-            colspan="5"
-            class="sin-registros"
-          >
-            Cargando resumen...
-          </td>
-        </tr>
-      `;
-
-      cuerpoTabla.innerHTML = `
-        <tr>
-          <td
-            colspan="9"
-            class="cargando"
-          >
-            Cargando datos...
-          </td>
-        </tr>
-      `;
 
       try {
 
@@ -1577,15 +2007,20 @@
             ? datos.registros
             : [];
 
-        const textoActualizacion =
-          document.getElementById(
-            "textoActualizacion"
-          );
-
-        textoActualizacion.textContent =
+        document.getElementById(
+          "textoActualizacion"
+        ).textContent =
           datos.actualizado
-            ? `Datos actualizados: ${formatearFechaHora(datos.actualizado)}`
-            : "Fecha de actualización no disponible";
+            ? (
+                "Datos actualizados: " +
+                formatearFechaHora(
+                  datos.actualizado
+                )
+              )
+            : (
+                "Fecha de actualización " +
+                "no disponible"
+              );
 
         construirFiltroDias();
         construirFiltroDestinos();
@@ -1614,36 +2049,10 @@
         ).textContent =
           "Sin datos disponibles";
 
-        grillaPredios.innerHTML = `
-          <div class="sin-predios">
-            No se pudieron cargar los predios.
-          </div>
-        `;
-
-        cuerpoResumen.innerHTML = `
-          <tr>
-            <td
-              colspan="5"
-              class="sin-registros"
-            >
-              No se pudo generar el resumen.
-            </td>
-          </tr>
-        `;
-
-        cuerpoTabla.innerHTML = `
-          <tr>
-            <td
-              colspan="9"
-              class="cargando"
-            >
-              No se pudieron cargar los registros.
-            </td>
-          </tr>
-        `;
-
         actualizarTarjetas([]);
-        actualizarCantidadResumen(0);
+        mostrarTarjetasPredio([]);
+        mostrarResumen([]);
+        mostrarTabla([]);
 
       } finally {
 
@@ -1655,166 +2064,9 @@
       }
     }
 
-    function construirFiltroDias() {
-
-      const dias = [
-        ...new Set(
-          todosLosRegistros
-            .map(
-              registro =>
-                obtenerClaveDia(
-                  registro["FIN CARGA"]
-                )
-            )
-            .filter(Boolean)
-        )
-      ].sort(
-        (a, b) =>
-          b.localeCompare(a)
-      );
-
-      filtroDia.innerHTML = [
-        `
-          <option value="">
-            Todos los días
-          </option>
-        `,
-        ...dias.map(
-          dia => `
-            <option
-              value="${dia}"
-              ${
-                diaSeleccionado === dia
-                  ? "selected"
-                  : ""
-              }
-            >
-              ${formatearDia(dia)}
-            </option>
-          `
-        )
-      ].join("");
-
-      filtroDia.onchange =
-        () => {
-
-          diaSeleccionado =
-            filtroDia.value || "";
-
-          aplicarFiltros();
-        };
-    }
-
-    function construirFiltroDestinos() {
-
-      const destinos = [
-        ...new Set(
-          todosLosRegistros
-            .map(
-              registro =>
-                String(
-                  registro.DESTINO ?? ""
-                ).trim()
-            )
-            .filter(Boolean)
-        )
-      ].sort(
-        (a, b) =>
-          mostrarDestino(a)
-            .localeCompare(
-              mostrarDestino(b),
-              "es"
-            )
-      );
-
-      filtroDestino.innerHTML = [
-        `
-          <option value="">
-            Todos los destinos
-          </option>
-        `,
-        ...destinos.map(
-          destino => `
-            <option
-              value="${escaparHtml(destino)}"
-              ${
-                destinoSeleccionado === destino
-                  ? "selected"
-                  : ""
-              }
-            >
-              ${escaparHtml(
-                mostrarDestino(destino)
-              )}
-            </option>
-          `
-        )
-      ].join("");
-
-      filtroDestino.onchange =
-        () => {
-
-          destinoSeleccionado =
-            filtroDestino.value || "";
-
-          aplicarFiltros();
-        };
-    }
-
-    function construirFiltroEstados() {
-
-      const estados = [
-        ...new Set(
-          todosLosRegistros
-            .map(
-              registro =>
-                String(
-                  registro[
-                    "ESTADO DESCARGA"
-                  ] ?? ""
-                ).trim()
-            )
-            .filter(Boolean)
-        )
-      ].sort(
-        (a, b) =>
-          a.localeCompare(
-            b,
-            "es"
-          )
-      );
-
-      filtroEstado.innerHTML = [
-        `
-          <option value="">
-            Todos los estados
-          </option>
-        `,
-        ...estados.map(
-          estado => `
-            <option
-              value="${escaparHtml(estado)}"
-              ${
-                estadoSeleccionado === estado
-                  ? "selected"
-                  : ""
-              }
-            >
-              ${escaparHtml(estado)}
-            </option>
-          `
-        )
-      ].join("");
-
-      filtroEstado.onchange =
-        () => {
-
-          estadoSeleccionado =
-            filtroEstado.value || "";
-
-          aplicarFiltros();
-        };
-    }
+    /* =====================================================
+       APLICAR FILTROS
+       ===================================================== */
 
     function aplicarFiltros() {
 
@@ -1873,6 +2125,10 @@
       );
     }
 
+    /* =====================================================
+       TARJETAS PRINCIPALES
+       ===================================================== */
+
     function actualizarTarjetas(
       registros
     ) {
@@ -1904,10 +2160,17 @@
       document.getElementById(
         "cantidadTabla"
       ).textContent =
-        `${formatoEntero.format(
-          registros.length
-        )} registros`;
+        (
+          formatoEntero.format(
+            registros.length
+          ) +
+          " registros"
+        );
     }
+
+    /* =====================================================
+       TARJETAS PREDIO
+       ===================================================== */
 
     function mostrarTarjetasPredio(
       registros
@@ -1924,7 +2187,9 @@
               registro.PREDIO
             );
 
-          if (!grupos.has(predio)) {
+          if (
+            !grupos.has(predio)
+          ) {
 
             grupos.set(
               predio,
@@ -1989,25 +2254,35 @@
                 : 0;
 
             return `
-              <article class="tarjeta-predio">
+              <article
+                class="tarjeta-predio"
+              >
 
-                <div class="nombre-predio">
+                <div
+                  class="nombre-predio"
+                >
                   ${escaparHtml(
                     item.predio
                   )}
                 </div>
 
-                <div class="valor-predio">
+                <div
+                  class="valor-predio"
+                >
                   ${item.descargados}
                   /
                   ${item.cargados}
                 </div>
 
-                <div class="leyenda-predio">
+                <div
+                  class="leyenda-predio"
+                >
                   Descargados / Cargados
                 </div>
 
-                <div class="porcentaje-predio">
+                <div
+                  class="porcentaje-predio"
+                >
                   ${porcentaje.toFixed(0)}%
                 </div>
 
@@ -2017,15 +2292,9 @@
         ).join("");
     }
 
-    function actualizarCantidadResumen(
-      cantidad
-    ) {
-
-      document.getElementById(
-        "cantidadResumen"
-      ).textContent =
-        `${cantidad} filas`;
-    }
+    /* =====================================================
+       RESUMEN
+       ===================================================== */
 
     function crearResumen(
       registros
@@ -2050,7 +2319,9 @@
           const clave =
             `${dia}|||${destino}`;
 
-          if (!grupos.has(clave)) {
+          if (
+            !grupos.has(clave)
+          ) {
 
             grupos.set(
               clave,
@@ -2091,7 +2362,9 @@
       ].sort(
         (a, b) => {
 
-          if (a.dia !== b.dia) {
+          if (
+            a.dia !== b.dia
+          ) {
 
             return b.dia.localeCompare(
               a.dia
@@ -2115,20 +2388,23 @@
           registros
         );
 
-      actualizarCantidadResumen(
-        resumen.length
-      );
+      document.getElementById(
+        "cantidadResumen"
+      ).textContent =
+        `${resumen.length} filas`;
 
       if (!resumen.length) {
 
         cuerpoResumen.innerHTML = `
           <tr>
+
             <td
               colspan="5"
               class="sin-registros"
             >
               No hay datos para generar el resumen.
             </td>
+
           </tr>
         `;
 
@@ -2143,7 +2419,7 @@
               <td>
                 ${
                   fila.dia ===
-                  "SIN_FECHA"
+                    "SIN_FECHA"
                     ? "Sin fecha"
                     : formatearDia(
                         fila.dia
@@ -2186,6 +2462,10 @@
         ).join("");
     }
 
+    /* =====================================================
+       DETALLE
+       ===================================================== */
+
     function mostrarTabla(
       registros
     ) {
@@ -2203,12 +2483,14 @@
 
         cuerpoTabla.innerHTML = `
           <tr>
+
             <td
               colspan="9"
               class="cargando"
             >
               No hay registros para los filtros seleccionados.
             </td>
+
           </tr>
         `;
 
@@ -2300,6 +2582,7 @@
                 </td>
 
                 <td>
+
                   <span
                     class="estado ${claseEstado}"
                   >
@@ -2307,6 +2590,7 @@
                       textoEstado
                     )}
                   </span>
+
                 </td>
 
                 <td>
@@ -2320,6 +2604,10 @@
           }
         ).join("");
     }
+
+    /* =====================================================
+       EVENTOS
+       ===================================================== */
 
     botonLimpiar.addEventListener(
       "click",
