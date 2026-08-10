@@ -51,7 +51,7 @@
     }
 
     .contenedor {
-      width: min(1500px, calc(100% - 28px));
+      width: min(1550px, calc(100% - 28px));
       margin: 0 auto;
       padding: 24px 0 40px;
     }
@@ -198,10 +198,6 @@
       border-color: var(--azul);
     }
 
-    /* =====================================================
-       TARJETAS POR PREDIO
-       ===================================================== */
-
     .panel-predios {
       margin-bottom: 14px;
       padding: 16px;
@@ -272,10 +268,6 @@
       text-align: center;
       color: var(--texto-suave);
     }
-
-    /* =====================================================
-       TABLA RESUMEN
-       ===================================================== */
 
     .panel-resumen {
       overflow: hidden;
@@ -380,10 +372,6 @@
       color: #ffd275;
     }
 
-    /* =====================================================
-       DETALLE
-       ===================================================== */
-
     .contenedor-tabla {
       width: 100%;
       height: auto;
@@ -394,7 +382,7 @@
 
     .tabla-detalle {
       width: 100%;
-      min-width: 1120px;
+      min-width: 1140px;
       border-collapse: collapse;
       table-layout: auto;
       font-size: 0.78rem;
@@ -408,10 +396,6 @@
       text-align: center;
       white-space: nowrap;
     }
-
-    /*
-      ENCABEZADOS ORDENABLES
-    */
 
     .tabla-detalle th.ordenable {
       cursor: pointer;
@@ -458,36 +442,43 @@
       line-height: 1.28;
     }
 
+    /* 1 - REMITO */
     .tabla-detalle th:nth-child(1),
     .tabla-detalle td:nth-child(1) {
       width: 88px;
       min-width: 88px;
     }
 
+    /* 2 - DESTINO */
     .tabla-detalle th:nth-child(2),
     .tabla-detalle td:nth-child(2) {
-      width: 150px;
-      min-width: 130px;
+      width: 145px;
+      min-width: 125px;
     }
 
+    /* 3 - PREDIO */
     .tabla-detalle th:nth-child(3),
     .tabla-detalle td:nth-child(3) {
-      width: 175px;
-      min-width: 145px;
+      width: 170px;
+      min-width: 140px;
     }
 
+    /* 4 - VEHICULO */
     .tabla-detalle th:nth-child(4),
     .tabla-detalle td:nth-child(4) {
-      width: 250px;
-      min-width: 210px;
+      width: 90px;
+      min-width: 82px;
+      white-space: nowrap;
     }
 
+    /* 5 - PRODUCTO */
     .tabla-detalle th:nth-child(5),
     .tabla-detalle td:nth-child(5) {
-      width: 82px;
-      min-width: 82px;
+      width: 235px;
+      min-width: 195px;
     }
 
+    /* 6 - FIN CARGA */
     .tabla-detalle th:nth-child(6),
     .tabla-detalle td:nth-child(6) {
       width: 126px;
@@ -495,30 +486,35 @@
       white-space: nowrap;
     }
 
+    /* 7 - NETO */
     .tabla-detalle th:nth-child(7),
     .tabla-detalle td:nth-child(7) {
-      width: 115px;
-      min-width: 95px;
-    }
-
-    .tabla-detalle th:nth-child(8),
-    .tabla-detalle td:nth-child(8) {
-      width: 68px;
-      min-width: 68px;
+      width: 65px;
+      min-width: 65px;
       white-space: nowrap;
     }
 
-    .tabla-detalle th:nth-child(9),
-    .tabla-detalle td:nth-child(9) {
+    /* 8 - ESTADO */
+    .tabla-detalle th:nth-child(8),
+    .tabla-detalle td:nth-child(8) {
       width: 118px;
       min-width: 118px;
       white-space: nowrap;
     }
 
+    /* 9 - GPS */
+    .tabla-detalle th:nth-child(9),
+    .tabla-detalle td:nth-child(9) {
+      width: 170px;
+      min-width: 140px;
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+
     .tabla-detalle td:nth-child(2),
     .tabla-detalle td:nth-child(3),
-    .tabla-detalle td:nth-child(4),
-    .tabla-detalle td:nth-child(7) {
+    .tabla-detalle td:nth-child(5),
+    .tabla-detalle td:nth-child(9) {
       white-space: normal;
       overflow-wrap: break-word;
     }
@@ -638,16 +634,8 @@
         font-size: 0.76rem;
       }
 
-      .contenedor-tabla {
-        width: 100%;
-        height: auto;
-        max-height: none;
-        overflow-x: auto;
-        overflow-y: visible;
-      }
-
       .tabla-detalle {
-        min-width: 1080px;
+        min-width: 1120px;
         font-size: 0.74rem;
       }
 
@@ -697,7 +685,6 @@
     <section class="tarjetas">
 
       <article class="tarjeta">
-
         <div class="tarjeta-titulo">
           Registros filtrados
         </div>
@@ -708,11 +695,9 @@
         >
           0
         </div>
-
       </article>
 
       <article class="tarjeta">
-
         <div class="tarjeta-titulo">
           Remitos falta descargar
         </div>
@@ -723,7 +708,6 @@
         >
           0
         </div>
-
       </article>
 
     </section>
@@ -733,7 +717,6 @@
       <div class="grilla-filtros">
 
         <div class="grupo-filtro">
-
           <label for="filtroDia">
             Días
           </label>
@@ -742,11 +725,9 @@
             class="selector"
             id="filtroDia"
           ></select>
-
         </div>
 
         <div class="grupo-filtro">
-
           <label for="filtroDestino">
             Destino
           </label>
@@ -755,11 +736,9 @@
             class="selector"
             id="filtroDestino"
           ></select>
-
         </div>
 
         <div class="grupo-filtro">
-
           <label for="filtroEstado">
             Estado de descarga
           </label>
@@ -768,7 +747,6 @@
             class="selector"
             id="filtroEstado"
           ></select>
-
         </div>
 
         <button
@@ -782,10 +760,6 @@
       </div>
 
     </section>
-
-    <!-- =====================================================
-         TARJETAS POR PREDIO
-         ===================================================== -->
 
     <section class="panel-predios">
 
@@ -803,10 +777,6 @@
       </div>
 
     </section>
-
-    <!-- =====================================================
-         RESUMEN
-         ===================================================== -->
 
     <section class="panel-resumen">
 
@@ -830,7 +800,6 @@
         <table class="tabla-resumen">
 
           <thead>
-
             <tr>
               <th>DÍA</th>
               <th>DESTINO</th>
@@ -838,11 +807,9 @@
               <th>DESCARGÓ</th>
               <th>FALTA DESCARGAR</th>
             </tr>
-
           </thead>
 
           <tbody id="cuerpoResumen">
-
             <tr>
               <td
                 colspan="5"
@@ -851,7 +818,6 @@
                 Cargando resumen...
               </td>
             </tr>
-
           </tbody>
 
         </table>
@@ -859,10 +825,6 @@
       </div>
 
     </section>
-
-    <!-- =====================================================
-         DETALLE DE REGISTROS
-         ===================================================== -->
 
     <section class="panel-tabla">
 
@@ -927,17 +889,6 @@
 
               <th
                 class="ordenable"
-                data-columna="PRODUCTO"
-                data-tipo="texto"
-              >
-                <span class="encabezado-orden">
-                  PRODUCTO
-                  <span class="icono-orden"></span>
-                </span>
-              </th>
-
-              <th
-                class="ordenable"
                 data-columna="VEHÍCULO"
                 data-tipo="texto"
               >
@@ -949,22 +900,22 @@
 
               <th
                 class="ordenable"
-                data-columna="FIN CARGA"
-                data-tipo="fecha"
+                data-columna="PRODUCTO"
+                data-tipo="texto"
               >
                 <span class="encabezado-orden">
-                  FIN CARGA
+                  PRODUCTO
                   <span class="icono-orden"></span>
                 </span>
               </th>
 
               <th
                 class="ordenable"
-                data-columna="OBSERVACIONES"
-                data-tipo="texto"
+                data-columna="FIN CARGA"
+                data-tipo="fecha"
               >
                 <span class="encabezado-orden">
-                  OBSERVACIONES
+                  FIN CARGA
                   <span class="icono-orden"></span>
                 </span>
               </th>
@@ -991,12 +942,22 @@
                 </span>
               </th>
 
+              <th
+                class="ordenable"
+                data-columna="GPS.UBICACION-VEL"
+                data-tipo="texto"
+              >
+                <span class="encabezado-orden">
+                  GPS UBICACIÓN / VEL
+                  <span class="icono-orden"></span>
+                </span>
+              </th>
+
             </tr>
 
           </thead>
 
           <tbody id="cuerpoTabla">
-
             <tr>
               <td
                 colspan="9"
@@ -1005,7 +966,6 @@
                 Cargando datos...
               </td>
             </tr>
-
           </tbody>
 
         </table>
@@ -1026,12 +986,6 @@
     let destinoSeleccionado = "";
     let estadoSeleccionado = "";
 
-    /*
-      ORDEN ACTUAL DE LA TABLA DETALLE
-
-      Por defecto:
-      FIN CARGA descendente.
-    */
     let columnaOrden = "FIN CARGA";
     let direccionOrden = "desc";
 
@@ -1067,20 +1021,22 @@
         ".tabla-detalle th.ordenable"
       );
 
-    const formatoNumero = new Intl.NumberFormat(
-      "es-UY",
-      {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      }
-    );
+    const formatoNumero =
+      new Intl.NumberFormat(
+        "es-UY",
+        {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        }
+      );
 
-    const formatoEntero = new Intl.NumberFormat(
-      "es-UY",
-      {
-        maximumFractionDigits: 0
-      }
-    );
+    const formatoEntero =
+      new Intl.NumberFormat(
+        "es-UY",
+        {
+          maximumFractionDigits: 0
+        }
+      );
 
     function corregirJson(texto) {
       return texto.replace(
@@ -1090,13 +1046,19 @@
     }
 
     function convertirFecha(valor) {
+
       if (!valor) {
         return null;
       }
 
-      const fecha = new Date(valor);
+      const fecha =
+        new Date(valor);
 
-      if (Number.isNaN(fecha.getTime())) {
+      if (
+        Number.isNaN(
+          fecha.getTime()
+        )
+      ) {
         return null;
       }
 
@@ -1104,6 +1066,7 @@
     }
 
     function obtenerClaveDia(valor) {
+
       const fecha =
         convertirFecha(valor);
 
@@ -1128,6 +1091,7 @@
     }
 
     function formatearDia(clave) {
+
       if (!clave) {
         return "Sin fecha";
       }
@@ -1139,6 +1103,7 @@
     }
 
     function formatearFechaHora(valor) {
+
       const fecha =
         convertirFecha(valor);
 
@@ -1173,13 +1138,17 @@
     }
 
     function mostrarDestino(valor) {
+
       const destinoOriginal =
         String(valor ?? "").trim();
 
       const destinoNormalizado =
         destinoOriginal
           .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
+          .replace(
+            /[\u0300-\u036f]/g,
+            ""
+          )
           .toUpperCase();
 
       if (
@@ -1208,6 +1177,7 @@
     }
 
     function mostrarPredio(valor) {
+
       const texto =
         String(valor ?? "").trim();
 
@@ -1221,7 +1191,31 @@
       return partes[0].trim() || texto;
     }
 
+    function mostrarGPS(valor) {
+
+      if (
+        valor === null ||
+        valor === undefined
+      ) {
+        return "—";
+      }
+
+      const texto =
+        String(valor).trim();
+
+      if (
+        texto === "" ||
+        texto.toLowerCase() === "nan" ||
+        texto.toLowerCase() === "null"
+      ) {
+        return "—";
+      }
+
+      return texto;
+    }
+
     function escaparHtml(valor) {
+
       return String(valor ?? "")
         .replaceAll("&", "&amp;")
         .replaceAll("<", "&lt;")
@@ -1231,10 +1225,14 @@
     }
 
     function obtenerNeto(registro) {
+
       const valor =
         registro["YA ENVIADOS.Neto"];
 
-      if (typeof valor === "number") {
+      if (
+        typeof valor === "number"
+      ) {
+
         return Number.isFinite(valor)
           ? valor
           : 0;
@@ -1252,14 +1250,19 @@
     }
 
     function normalizarEstado(valor) {
+
       return String(valor ?? "")
         .trim()
         .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
+        .replace(
+          /[\u0300-\u036f]/g,
+          ""
+        )
         .toUpperCase();
     }
 
     function estaDescargado(valor) {
+
       const estado =
         normalizarEstado(valor);
 
@@ -1270,15 +1273,15 @@
       );
     }
 
-    /* =====================================================
-       ORDENAMIENTO
-       ===================================================== */
-
     function normalizarTextoOrden(valor) {
+
       return String(valor ?? "")
         .trim()
         .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
+        .replace(
+          /[\u0300-\u036f]/g,
+          ""
+        )
         .toUpperCase();
     }
 
@@ -1293,8 +1296,11 @@
       }
 
       if (tipo === "numero") {
+
         const valor =
-          Number(registro[columna]);
+          Number(
+            registro[columna]
+          );
 
         return Number.isFinite(valor)
           ? valor
@@ -1302,6 +1308,7 @@
       }
 
       if (tipo === "fecha") {
+
         const fecha =
           convertirFecha(
             registro[columna]
@@ -1312,10 +1319,10 @@
           : 0;
       }
 
-      /*
-        Para DESTINO usamos el nombre visible.
-      */
-      if (columna === "DESTINO") {
+      if (
+        columna === "DESTINO"
+      ) {
+
         return normalizarTextoOrden(
           mostrarDestino(
             registro[columna]
@@ -1331,6 +1338,7 @@
     function obtenerTipoColumna(
       columna
     ) {
+
       const encabezado =
         document.querySelector(
           `.tabla-detalle th[data-columna="${columna}"]`
@@ -1344,6 +1352,7 @@
     function ordenarRegistros(
       registros
     ) {
+
       const copia =
         [...registros];
 
@@ -1386,14 +1395,15 @@
           } else {
 
             resultado =
-              String(valorA).localeCompare(
-                String(valorB),
-                "es",
-                {
-                  numeric: true,
-                  sensitivity: "base"
-                }
-              );
+              String(valorA)
+                .localeCompare(
+                  String(valorB),
+                  "es",
+                  {
+                    numeric: true,
+                    sensitivity: "base"
+                  }
+                );
           }
 
           return direccionOrden === "asc"
@@ -1451,13 +1461,9 @@
               const nuevaColumna =
                 encabezado.dataset.columna;
 
-              /*
-                Si hacemos clic nuevamente
-                sobre la misma columna,
-                alternamos asc / desc.
-              */
               if (
-                columnaOrden === nuevaColumna
+                columnaOrden ===
+                nuevaColumna
               ) {
 
                 direccionOrden =
@@ -1470,11 +1476,6 @@
                 columnaOrden =
                   nuevaColumna;
 
-                /*
-                  Al seleccionar una nueva columna:
-                  fecha y números comienzan descendente.
-                  texto comienza ascendente.
-                */
                 const tipo =
                   encabezado.dataset.tipo;
 
@@ -1483,8 +1484,11 @@
                   tipo === "numero" ||
                   tipo === "neto"
                 ) {
+
                   direccionOrden = "desc";
+
                 } else {
+
                   direccionOrden = "asc";
                 }
               }
@@ -1502,11 +1506,8 @@
       actualizarIndicadoresOrden();
     }
 
-    /* =====================================================
-       CARGA DE DATOS
-       ===================================================== */
-
     async function cargarDatos() {
+
       mensajeError.style.display =
         "none";
 
@@ -1555,6 +1556,7 @@
           );
 
         if (!respuesta.ok) {
+
           throw new Error(
             `La API respondió con estado ${respuesta.status}`
           );
@@ -1605,9 +1607,6 @@
           </strong>
           <br>
           ${escaparHtml(error.message)}
-          <br>
-          Verificá la variable
-          DROPBOX_JSON_URL en Cloudflare.
         `;
 
         document.getElementById(
@@ -1656,10 +1655,6 @@
       }
     }
 
-    /* =====================================================
-       FILTROS
-       ===================================================== */
-
     function construirFiltroDias() {
 
       const dias = [
@@ -1677,15 +1672,6 @@
         (a, b) =>
           b.localeCompare(a)
       );
-
-      if (
-        diaSeleccionado &&
-        !dias.includes(
-          diaSeleccionado
-        )
-      ) {
-        diaSeleccionado = "";
-      }
 
       filtroDia.innerHTML = [
         `
@@ -1740,15 +1726,6 @@
               "es"
             )
       );
-
-      if (
-        destinoSeleccionado &&
-        !destinos.includes(
-          destinoSeleccionado
-        )
-      ) {
-        destinoSeleccionado = "";
-      }
 
       filtroDestino.innerHTML = [
         `
@@ -1807,15 +1784,6 @@
           )
       );
 
-      if (
-        estadoSeleccionado &&
-        !estados.includes(
-          estadoSeleccionado
-        )
-      ) {
-        estadoSeleccionado = "";
-      }
-
       filtroEstado.innerHTML = [
         `
           <option value="">
@@ -1858,13 +1826,15 @@
               !diaSeleccionado ||
               obtenerClaveDia(
                 registro["FIN CARGA"]
-              ) === diaSeleccionado;
+              ) ===
+                diaSeleccionado;
 
             const coincideDestino =
               !destinoSeleccionado ||
               String(
                 registro.DESTINO ?? ""
-              ) === destinoSeleccionado;
+              ) ===
+                destinoSeleccionado;
 
             const coincideEstado =
               !estadoSeleccionado ||
@@ -1903,10 +1873,6 @@
       );
     }
 
-    /* =====================================================
-       TARJETAS PRINCIPALES
-       ===================================================== */
-
     function actualizarTarjetas(
       registros
     ) {
@@ -1943,10 +1909,6 @@
         )} registros`;
     }
 
-    /* =====================================================
-       TARJETAS POR PREDIO
-       ===================================================== */
-
     function mostrarTarjetasPredio(
       registros
     ) {
@@ -1957,39 +1919,25 @@
       registros.forEach(
         registro => {
 
-          const predioCompleto =
-            String(
-              registro.PREDIO ?? ""
-            ).trim();
-
-          const predioVisible =
+          const predio =
             mostrarPredio(
-              predioCompleto
+              registro.PREDIO
             );
 
-          if (
-            !grupos.has(
-              predioVisible
-            )
-          ) {
+          if (!grupos.has(predio)) {
 
             grupos.set(
-              predioVisible,
+              predio,
               {
-                predio:
-                  predioVisible,
-
+                predio,
                 cargados: 0,
-
                 descargados: 0
               }
             );
           }
 
           const grupo =
-            grupos.get(
-              predioVisible
-            );
+            grupos.get(predio);
 
           grupo.cargados += 1;
 
@@ -2000,6 +1948,7 @@
               ]
             )
           ) {
+
             grupo.descargados += 1;
           }
         }
@@ -2049,13 +1998,9 @@
                 </div>
 
                 <div class="valor-predio">
-                  ${formatoEntero.format(
-                    item.descargados
-                  )}
+                  ${item.descargados}
                   /
-                  ${formatoEntero.format(
-                    item.cargados
-                  )}
+                  ${item.cargados}
                 </div>
 
                 <div class="leyenda-predio">
@@ -2072,10 +2017,6 @@
         ).join("");
     }
 
-    /* =====================================================
-       RESUMEN
-       ===================================================== */
-
     function actualizarCantidadResumen(
       cantidad
     ) {
@@ -2083,9 +2024,7 @@
       document.getElementById(
         "cantidadResumen"
       ).textContent =
-        `${formatoEntero.format(
-          cantidad
-        )} filas`;
+        `${cantidad} filas`;
     }
 
     function crearResumen(
@@ -2103,29 +2042,21 @@
               registro["FIN CARGA"]
             ) || "SIN_FECHA";
 
-          const destinoOriginal =
-            String(
-              registro.DESTINO ?? ""
-            ).trim();
-
-          const destinoVisible =
+          const destino =
             mostrarDestino(
-              destinoOriginal
+              registro.DESTINO
             );
 
           const clave =
-            `${dia}|||${destinoVisible}`;
+            `${dia}|||${destino}`;
 
-          if (
-            !grupos.has(clave)
-          ) {
+          if (!grupos.has(clave)) {
 
             grupos.set(
               clave,
               {
                 dia,
-                destino:
-                  destinoVisible,
+                destino,
                 total: 0,
                 descargados: 0,
                 pendientes: 0
@@ -2160,9 +2091,7 @@
       ].sort(
         (a, b) => {
 
-          if (
-            a.dia !== b.dia
-          ) {
+          if (a.dia !== b.dia) {
 
             return b.dia.localeCompare(
               a.dia
@@ -2232,9 +2161,7 @@
                 <span
                   class="valor-resumen valor-total"
                 >
-                  ${formatoEntero.format(
-                    fila.total
-                  )}
+                  ${fila.total}
                 </span>
               </td>
 
@@ -2242,9 +2169,7 @@
                 <span
                   class="valor-resumen valor-descargado"
                 >
-                  ${formatoEntero.format(
-                    fila.descargados
-                  )}
+                  ${fila.descargados}
                 </span>
               </td>
 
@@ -2252,9 +2177,7 @@
                 <span
                   class="valor-resumen valor-pendiente"
                 >
-                  ${formatoEntero.format(
-                    fila.pendientes
-                  )}
+                  ${fila.pendientes}
                 </span>
               </td>
 
@@ -2262,10 +2185,6 @@
           `
         ).join("");
     }
-
-    /* =====================================================
-       DETALLE
-       ===================================================== */
 
     function mostrarTabla(
       registros
@@ -2314,18 +2233,12 @@
                 ? "estado-descargado"
                 : "estado-pendiente";
 
-            let observaciones =
-              registro.OBSERVACIONES;
-
-            if (
-              observaciones == null ||
-              String(observaciones)
-                .trim()
-                .toLowerCase() ===
-                  "nan"
-            ) {
-              observaciones = "—";
-            }
+            const gps =
+              mostrarGPS(
+                registro[
+                  "GPS.UBICACION-VEL"
+                ]
+              );
 
             return `
               <tr>
@@ -2355,16 +2268,16 @@
 
                 <td>
                   ${escaparHtml(
-                    registro.PRODUCTO ??
-                    "—"
+                    registro[
+                      "VEHÍCULO"
+                    ] ?? "—"
                   )}
                 </td>
 
                 <td>
                   ${escaparHtml(
-                    registro[
-                      "VEHÍCULO"
-                    ] ?? "—"
+                    registro.PRODUCTO ??
+                    "—"
                   )}
                 </td>
 
@@ -2375,12 +2288,6 @@
                         "FIN CARGA"
                       ]
                     )
-                  )}
-                </td>
-
-                <td>
-                  ${escaparHtml(
-                    observaciones
                   )}
                 </td>
 
@@ -2402,15 +2309,17 @@
                   </span>
                 </td>
 
+                <td>
+                  ${escaparHtml(
+                    gps
+                  )}
+                </td>
+
               </tr>
             `;
           }
         ).join("");
     }
-
-    /* =====================================================
-       EVENTOS
-       ===================================================== */
 
     botonLimpiar.addEventListener(
       "click",
@@ -2433,14 +2342,8 @@
       cargarDatos
     );
 
-    /*
-      Activa clic en los encabezados.
-    */
     configurarOrdenColumnas();
 
-    /*
-      Primera carga.
-    */
     cargarDatos();
 
   </script>
