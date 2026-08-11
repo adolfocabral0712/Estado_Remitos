@@ -94,10 +94,6 @@
       cursor: wait;
     }
 
-    /* =====================================================
-       TARJETAS SUPERIORES
-       ===================================================== */
-
     .tarjetas {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -145,7 +141,7 @@
     }
 
     /* =====================================================
-       FILTROS EN TARJETAS
+       FILTROS COMO TARJETAS
        ===================================================== */
 
     .filtros {
@@ -180,7 +176,6 @@
 
     .tarjeta-filtro {
       min-height: 43px;
-
       padding: 9px 12px;
 
       border: 1px solid var(--borde);
@@ -282,11 +277,9 @@
 
     .tarjeta-predio {
       min-height: 112px;
-
       background: #0a1929;
       border: 1px solid var(--borde);
       border-radius: 11px;
-
       padding: 13px 10px;
 
       display: flex;
@@ -379,21 +372,16 @@
     .tabla-resumen {
       width: 100%;
       min-width: 700px;
-
       border-collapse: collapse;
       table-layout: fixed;
-
       font-size: 0.82rem;
     }
 
     .tabla-resumen th {
       padding: 11px 8px;
-
       background: #10243a;
       color: #bdd0e2;
-
       border-bottom: 1px solid var(--borde);
-
       text-align: center;
       white-space: normal;
       line-height: 1.25;
@@ -401,10 +389,7 @@
 
     .tabla-resumen td {
       padding: 10px 8px;
-
-      border-bottom:
-        1px solid rgba(32, 54, 80, 0.65);
-
+      border-bottom: 1px solid rgba(32, 54, 80, 0.65);
       text-align: center;
       vertical-align: middle;
     }
@@ -456,36 +441,30 @@
     }
 
     /* =====================================================
-       TABLA DETALLE
+       DETALLE
        ===================================================== */
 
     .contenedor-tabla {
       width: 100%;
       height: auto;
       max-height: none;
-
       overflow-x: auto;
       overflow-y: visible;
     }
 
     .tabla-detalle {
       width: 100%;
-      min-width: 1140px;
-
+      min-width: 1000px;
       border-collapse: collapse;
       table-layout: auto;
-
       font-size: 0.78rem;
     }
 
     .tabla-detalle th {
       padding: 10px 7px;
-
       background: #10243a;
       color: #bdd0e2;
-
       border-bottom: 1px solid var(--borde);
-
       text-align: center;
       white-space: nowrap;
     }
@@ -519,9 +498,7 @@
     .icono-orden {
       display: inline-block;
       min-width: 10px;
-
       color: #63809c;
-
       font-size: 0.7rem;
       line-height: 1;
     }
@@ -532,13 +509,9 @@
 
     .tabla-detalle td {
       padding: 9px 7px;
-
-      border-bottom:
-        1px solid rgba(32, 54, 80, 0.65);
-
+      border-bottom: 1px solid rgba(32, 54, 80, 0.65);
       text-align: center;
       vertical-align: middle;
-
       line-height: 1.28;
     }
 
@@ -563,7 +536,7 @@
       min-width: 140px;
     }
 
-    /* 4 VEHICULO */
+    /* 4 VEHÍCULO */
     .tabla-detalle th:nth-child(4),
     .tabla-detalle td:nth-child(4) {
       width: 90px;
@@ -602,19 +575,9 @@
       white-space: nowrap;
     }
 
-    /* 9 GPS */
-    .tabla-detalle th:nth-child(9),
-    .tabla-detalle td:nth-child(9) {
-      width: 170px;
-      min-width: 140px;
-      white-space: normal;
-      overflow-wrap: anywhere;
-    }
-
     .tabla-detalle td:nth-child(2),
     .tabla-detalle td:nth-child(3),
-    .tabla-detalle td:nth-child(5),
-    .tabla-detalle td:nth-child(9) {
+    .tabla-detalle td:nth-child(5) {
       white-space: normal;
       overflow-wrap: break-word;
     }
@@ -627,10 +590,8 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-
       border-radius: 999px;
       padding: 5px 9px;
-
       font-size: 0.75rem;
       font-weight: 800;
       white-space: nowrap;
@@ -660,19 +621,11 @@
 
     .error {
       display: none;
-
       padding: 16px;
       margin-bottom: 14px;
-
-      border-color:
-        rgba(239, 107, 115, 0.55);
-
+      border-color: rgba(239, 107, 115, 0.55);
       color: #ffc2c6;
     }
-
-    /* =====================================================
-       RESPONSIVE
-       ===================================================== */
 
     @media (max-width: 700px) {
 
@@ -747,7 +700,7 @@
       }
 
       .tabla-detalle {
-        min-width: 1120px;
+        min-width: 980px;
         font-size: 0.74rem;
       }
 
@@ -759,17 +712,12 @@
         padding: 8px 6px;
       }
     }
-
   </style>
 </head>
 
 <body>
 
   <main class="contenedor">
-
-    <!-- =====================================================
-         ENCABEZADO
-         ===================================================== -->
 
     <header class="encabezado">
 
@@ -802,10 +750,6 @@
       class="error"
       id="mensajeError"
     ></div>
-
-    <!-- =====================================================
-         TARJETAS PRINCIPALES
-         ===================================================== -->
 
     <section class="tarjetas">
 
@@ -842,7 +786,7 @@
     </section>
 
     <!-- =====================================================
-         FILTROS EN TARJETAS
+         FILTROS
          ===================================================== -->
 
     <section class="filtros">
@@ -856,8 +800,7 @@
         <div
           class="opciones-filtro"
           id="filtroDias"
-        >
-        </div>
+        ></div>
 
       </div>
 
@@ -870,8 +813,7 @@
         <div
           class="opciones-filtro"
           id="filtroDestinos"
-        >
-        </div>
+        ></div>
 
       </div>
 
@@ -884,8 +826,7 @@
         <div
           class="opciones-filtro"
           id="filtroEstados"
-        >
-        </div>
+        ></div>
 
       </div>
 
@@ -962,12 +903,14 @@
           <tbody id="cuerpoResumen">
 
             <tr>
+
               <td
                 colspan="5"
                 class="sin-registros"
               >
                 Cargando resumen...
               </td>
+
             </tr>
 
           </tbody>
@@ -1098,17 +1041,6 @@
                 </span>
               </th>
 
-              <th
-                class="ordenable"
-                data-columna="GPS.UBICACION-VEL"
-                data-tipo="texto"
-              >
-                <span class="encabezado-orden">
-                  GPS UBICACIÓN / VEL
-                  <span class="icono-orden"></span>
-                </span>
-              </th>
-
             </tr>
 
           </thead>
@@ -1118,7 +1050,7 @@
             <tr>
 
               <td
-                colspan="9"
+                colspan="8"
                 class="cargando"
               >
                 Cargando datos...
@@ -1137,10 +1069,6 @@
   </main>
 
   <script>
-
-    /* =====================================================
-       CONFIGURACIÓN
-       ===================================================== */
 
     const URL_DATOS = "/api/datos";
 
@@ -1202,10 +1130,6 @@
           maximumFractionDigits: 0
         }
       );
-
-    /* =====================================================
-       UTILIDADES
-       ===================================================== */
 
     function corregirJson(texto) {
 
@@ -1333,7 +1257,6 @@
           "POLO LOGISTICO"
         )
       ) {
-
         return "POLO LOGISTICO";
       }
 
@@ -1348,7 +1271,6 @@
           )
         )
       ) {
-
         return "UPM - PDT";
       }
 
@@ -1371,31 +1293,6 @@
         partes[0].trim() ||
         texto
       );
-    }
-
-    function mostrarGPS(valor) {
-
-      if (
-        valor === null ||
-        valor === undefined
-      ) {
-
-        return "—";
-      }
-
-      const texto =
-        String(valor).trim();
-
-      if (
-        texto === "" ||
-        texto.toLowerCase() === "nan" ||
-        texto.toLowerCase() === "null"
-      ) {
-
-        return "—";
-      }
-
-      return texto;
     }
 
     function escaparHtml(valor) {
@@ -1458,7 +1355,7 @@
     }
 
     /* =====================================================
-       FILTROS COMO TARJETAS
+       FILTROS
        ===================================================== */
 
     function crearBotonFiltro(
@@ -1509,16 +1406,6 @@
         (a, b) =>
           b.localeCompare(a)
       );
-
-      if (
-        diaSeleccionado &&
-        !dias.includes(
-          diaSeleccionado
-        )
-      ) {
-
-        diaSeleccionado = "";
-      }
 
       filtroDias.innerHTML = "";
 
@@ -1583,16 +1470,6 @@
             )
       );
 
-      if (
-        destinoSeleccionado &&
-        !destinos.includes(
-          destinoSeleccionado
-        )
-      ) {
-
-        destinoSeleccionado = "";
-      }
-
       filtroDestinos.innerHTML = "";
 
       filtroDestinos.appendChild(
@@ -1619,8 +1496,7 @@
             crearBotonFiltro(
               mostrarDestino(destino),
               destino,
-              destinoSeleccionado ===
-                destino,
+              destinoSeleccionado === destino,
               valor => {
 
                 destinoSeleccionado =
@@ -1658,16 +1534,6 @@
           )
       );
 
-      if (
-        estadoSeleccionado &&
-        !estados.includes(
-          estadoSeleccionado
-        )
-      ) {
-
-        estadoSeleccionado = "";
-      }
-
       filtroEstados.innerHTML = "";
 
       filtroEstados.appendChild(
@@ -1694,8 +1560,7 @@
             crearBotonFiltro(
               estado,
               estado,
-              estadoSeleccionado ===
-                estado,
+              estadoSeleccionado === estado,
               valor => {
 
                 estadoSeleccionado =
@@ -1711,7 +1576,7 @@
     }
 
     /* =====================================================
-       ORDENAMIENTO DETALLE
+       ORDENAMIENTO
        ===================================================== */
 
     function normalizarTextoOrden(valor) {
@@ -1732,16 +1597,11 @@
       tipo
     ) {
 
-      if (
-        tipo === "neto"
-      ) {
-
+      if (tipo === "neto") {
         return obtenerNeto(registro);
       }
 
-      if (
-        tipo === "numero"
-      ) {
+      if (tipo === "numero") {
 
         const valor =
           Number(
@@ -1753,9 +1613,7 @@
           : -Infinity;
       }
 
-      if (
-        tipo === "fecha"
-      ) {
+      if (tipo === "fecha") {
 
         const fecha =
           convertirFecha(
@@ -1961,7 +1819,7 @@
     }
 
     /* =====================================================
-       CARGA
+       CARGAR DATOS
        ===================================================== */
 
     async function cargarDatos() {
@@ -2018,8 +1876,7 @@
                 )
               )
             : (
-                "Fecha de actualización " +
-                "no disponible"
+                "Fecha de actualización no disponible"
               );
 
         construirFiltroDias();
@@ -2126,7 +1983,7 @@
     }
 
     /* =====================================================
-       TARJETAS PRINCIPALES
+       TARJETAS
        ===================================================== */
 
     function actualizarTarjetas(
@@ -2169,7 +2026,7 @@
     }
 
     /* =====================================================
-       TARJETAS PREDIO
+       PREDIOS
        ===================================================== */
 
     function mostrarTarjetasPredio(
@@ -2485,7 +2342,7 @@
           <tr>
 
             <td
-              colspan="9"
+              colspan="8"
               class="cargando"
             >
               No hay registros para los filtros seleccionados.
@@ -2514,13 +2371,6 @@
               )
                 ? "estado-descargado"
                 : "estado-pendiente";
-
-            const gps =
-              mostrarGPS(
-                registro[
-                  "GPS.UBICACION-VEL"
-                ]
-              );
 
             return `
               <tr>
@@ -2591,12 +2441,6 @@
                     )}
                   </span>
 
-                </td>
-
-                <td>
-                  ${escaparHtml(
-                    gps
-                  )}
                 </td>
 
               </tr>
