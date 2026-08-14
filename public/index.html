@@ -454,7 +454,7 @@
 
     .tabla-detalle {
       width: 100%;
-      min-width: 1000px;
+      min-width: 1380px;
       border-collapse: collapse;
       table-layout: auto;
       font-size: 0.78rem;
@@ -573,6 +573,42 @@
       width: 118px;
       min-width: 118px;
       white-space: nowrap;
+    }
+
+    /* 9 UBICACION - VELOCIDAD */
+    .tabla-detalle th:nth-child(9),
+    .tabla-detalle td:nth-child(9) {
+      width: 220px;
+      min-width: 180px;
+      white-space: normal;
+    }
+
+    /* 10 REPORTE GPS */
+    .tabla-detalle th:nth-child(10),
+    .tabla-detalle td:nth-child(10) {
+      width: 105px;
+      min-width: 105px;
+      white-space: nowrap;
+    }
+
+    .boton-gps {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 76px;
+      padding: 6px 9px;
+      border: 1px solid var(--azul);
+      border-radius: 8px;
+      background: rgba(45, 168, 255, 0.12);
+      color: #ffffff;
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .boton-gps:hover {
+      background: rgba(45, 168, 255, 0.22);
     }
 
     .tabla-detalle td:nth-child(2),
@@ -700,7 +736,7 @@
       }
 
       .tabla-detalle {
-        min-width: 980px;
+        min-width: 1320px;
         font-size: 0.74rem;
       }
 
@@ -1021,7 +1057,7 @@
 
               <th
                 class="ordenable"
-                data-columna="YA ENVIADOS.Neto"
+                data-columna="NETO"
                 data-tipo="neto"
               >
                 <span class="encabezado-orden">
@@ -1041,6 +1077,28 @@
                 </span>
               </th>
 
+              <th
+                class="ordenable"
+                data-columna="UBICACION - VELOCIDAD"
+                data-tipo="texto"
+              >
+                <span class="encabezado-orden">
+                  UBICACIÓN - VELOCIDAD
+                  <span class="icono-orden"></span>
+                </span>
+              </th>
+
+              <th
+                class="ordenable"
+                data-columna="REPORTE GPS"
+                data-tipo="texto"
+              >
+                <span class="encabezado-orden">
+                  REPORTE GPS
+                  <span class="icono-orden"></span>
+                </span>
+              </th>
+
             </tr>
 
           </thead>
@@ -1050,7 +1108,7 @@
             <tr>
 
               <td
-                colspan="8"
+                colspan="10"
                 class="cargando"
               >
                 Cargando datos...
@@ -1130,14 +1188,6 @@
           maximumFractionDigits: 0
         }
       );
-
-    function corregirJson(texto) {
-
-      return texto.replace(
-        /(-?\d+)\.(\s*[,}\]])/g,
-        "$1$2"
-      );
-    }
 
     function convertirFecha(valor) {
 
@@ -1308,7 +1358,7 @@
     function obtenerNeto(registro) {
 
       const valor =
-        registro["YA ENVIADOS.Neto"];
+        registro["NETO"];
 
       if (
         typeof valor === "number"
@@ -1854,9 +1904,7 @@
           await respuesta.text();
 
         const datos =
-          JSON.parse(
-            corregirJson(texto)
-          );
+          JSON.parse(texto);
 
         todosLosRegistros =
           Array.isArray(
@@ -2323,6 +2371,54 @@
        DETALLE
        ===================================================== */
 
+    function obtenerReporteGPS(registro) {
+
+      return String(
+        registro["REPORTE GPS"] ?? ""
+      ).trim();
+    }
+
+    function esUrlValida(valor) {
+
+      try {
+        const url = new URL(valor);
+
+        return (
+          url.protocol === "http:" ||
+          url.protocol === "https:"
+        );
+
+      } catch {
+        return false;
+      }
+    }
+
+    function mostrarReporteGPS(registro) {
+
+      const reporte =
+        obtenerReporteGPS(registro);
+
+      if (!reporte) {
+        return "—";
+      }
+
+      if (esUrlValida(reporte)) {
+
+        return `
+          <a
+            class="boton-gps"
+            href="${escaparHtml(reporte)}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            VER GPS
+          </a>
+        `;
+      }
+
+      return escaparHtml(reporte);
+    }
+
     function mostrarTabla(
       registros
     ) {
@@ -2441,6 +2537,20 @@
                     )}
                   </span>
 
+                </td>
+
+                <td>
+                  ${escaparHtml(
+                    registro[
+                      "UBICACION - VELOCIDAD"
+                    ] ?? "—"
+                  )}
+                </td>
+
+                <td>
+                  ${mostrarReporteGPS(
+                    registro
+                  )}
                 </td>
 
               </tr>
