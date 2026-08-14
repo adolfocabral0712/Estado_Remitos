@@ -1090,11 +1090,11 @@
 
               <th
                 class="ordenable"
-                data-columna="REPORTE GPS"
+                data-columna="REPORTE GPS HACE"
                 data-tipo="texto"
               >
                 <span class="encabezado-orden">
-                  REPORTE GPS
+                  REPORTE GPS HACE
                   <span class="icono-orden"></span>
                 </span>
               </th>
@@ -2374,7 +2374,7 @@
     function obtenerReporteGPS(registro) {
 
       return String(
-        registro["REPORTE GPS"] ?? ""
+        registro["REPORTE GPS HACE"] ?? ""
       ).trim();
     }
 
@@ -2438,7 +2438,7 @@
           <tr>
 
             <td
-              colspan="8"
+              colspan="10"
               class="cargando"
             >
               No hay registros para los filtros seleccionados.
