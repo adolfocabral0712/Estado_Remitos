@@ -991,7 +991,7 @@
 
               <th
                 class="ordenable"
-                data-columna="REMITO MONTE"
+                data-columna="numero_1"
                 data-tipo="numero"
               >
                 <span class="encabezado-orden">
@@ -1002,7 +1002,7 @@
 
               <th
                 class="ordenable"
-                data-columna="DESTINO"
+                data-columna="destino"
                 data-tipo="texto"
               >
                 <span class="encabezado-orden">
@@ -1013,7 +1013,7 @@
 
               <th
                 class="ordenable"
-                data-columna="PREDIO"
+                data-columna="predio"
                 data-tipo="texto"
               >
                 <span class="encabezado-orden">
@@ -1024,7 +1024,7 @@
 
               <th
                 class="ordenable"
-                data-columna="VEHÍCULO"
+                data-columna="vehiculo"
                 data-tipo="texto"
               >
                 <span class="encabezado-orden">
@@ -1035,7 +1035,7 @@
 
               <th
                 class="ordenable"
-                data-columna="PRODUCTO"
+                data-columna="producto"
                 data-tipo="texto"
               >
                 <span class="encabezado-orden">
@@ -1046,7 +1046,7 @@
 
               <th
                 class="ordenable"
-                data-columna="FIN CARGA"
+                data-columna="fin_carga"
                 data-tipo="fecha"
               >
                 <span class="encabezado-orden">
@@ -1057,7 +1057,7 @@
 
               <th
                 class="ordenable"
-                data-columna="NETO"
+                data-columna="neto_ton"
                 data-tipo="neto"
               >
                 <span class="encabezado-orden">
@@ -1068,7 +1068,7 @@
 
               <th
                 class="ordenable"
-                data-columna="ESTADO DESCARGA"
+                data-columna="estado_descarga"
                 data-tipo="texto"
               >
                 <span class="encabezado-orden">
@@ -1079,7 +1079,7 @@
 
               <th
                 class="ordenable"
-                data-columna="UBICACION - VELOCIDAD"
+                data-columna="geocerca"
                 data-tipo="texto"
               >
                 <span class="encabezado-orden">
@@ -1090,7 +1090,7 @@
 
               <th
                 class="ordenable"
-                data-columna="REPORTE GPS HACE"
+                data-columna="reporte_gps_hace"
                 data-tipo="texto"
               >
                 <span class="encabezado-orden">
@@ -1137,7 +1137,7 @@
     let destinoSeleccionado = "";
     let estadoSeleccionado = "";
 
-    let columnaOrden = "FIN CARGA";
+    let columnaOrden = "fin_carga";
     let direccionOrden = "desc";
 
     const filtroDias =
@@ -1195,18 +1195,34 @@
         return null;
       }
 
-      const fecha =
-        new Date(valor);
+      const texto = String(valor).trim();
 
-      if (
-        Number.isNaN(
-          fecha.getTime()
-        )
-      ) {
-        return null;
+      // Formato del JSON: dd/mm/yyyy hh:mm:ss
+      const match = texto.match(
+        /^(\d{1,2})\/(\d{1,2})\/(\d{4})\s+(\d{1,2}):(\d{2})(?::(\d{2}))?$/
+      );
+
+      if (match) {
+        const [, d, m, y, hh, mm, ss = "0"] = match;
+        const fechaLocal = new Date(
+          Number(y),
+          Number(m) - 1,
+          Number(d),
+          Number(hh),
+          Number(mm),
+          Number(ss)
+        );
+
+        return Number.isNaN(fechaLocal.getTime())
+          ? null
+          : fechaLocal;
       }
 
-      return fecha;
+      const fecha = new Date(texto);
+
+      return Number.isNaN(fecha.getTime())
+        ? null
+        : fecha;
     }
 
     function obtenerClaveDia(valor) {
@@ -1345,6 +1361,42 @@
       );
     }
 
+    function formatearUbicacionVelocidad(registro) {
+
+      const geocerca = String(
+        registro.geocerca ?? ""
+      ).trim();
+
+      const velocidadRaw =
+        registro.velocidad;
+
+      const velocidad = Number(
+        velocidadRaw
+      );
+
+      const partes = [];
+
+      if (
+        geocerca &&
+        geocerca.toLowerCase() !== "nan"
+      ) {
+        partes.push(geocerca);
+      }
+
+      if (
+        velocidadRaw !== null &&
+        velocidadRaw !== undefined &&
+        String(velocidadRaw).trim() !== "" &&
+        Number.isFinite(velocidad)
+      ) {
+        partes.push(`${velocidad.toFixed(0)} km/h`);
+      }
+
+      return partes.length
+        ? partes.join(" - ")
+        : "—";
+    }
+
     function escaparHtml(valor) {
 
       return String(valor ?? "")
@@ -1358,7 +1410,7 @@
     function obtenerNeto(registro) {
 
       const valor =
-        registro["NETO"];
+        registro["neto_ton"];
 
       if (
         typeof valor === "number"
@@ -1447,7 +1499,7 @@
             .map(
               registro =>
                 obtenerClaveDia(
-                  registro["FIN CARGA"]
+                  registro["fin_carga"]
                 )
             )
             .filter(Boolean)
@@ -1506,7 +1558,7 @@
             .map(
               registro =>
                 String(
-                  registro.DESTINO ?? ""
+                  registro.destino ?? ""
                 ).trim()
             )
             .filter(Boolean)
@@ -1569,9 +1621,7 @@
             .map(
               registro =>
                 String(
-                  registro[
-                    "ESTADO DESCARGA"
-                  ] ?? ""
+                  registro.estado_descarga ?? ""
                 ).trim()
             )
             .filter(Boolean)
@@ -1676,7 +1726,7 @@
       }
 
       if (
-        columna === "DESTINO"
+        columna === "destino"
       ) {
 
         return normalizarTextoOrden(
@@ -1982,23 +2032,21 @@
             const coincideDia =
               !diaSeleccionado ||
               obtenerClaveDia(
-                registro["FIN CARGA"]
+                registro["fin_carga"]
               ) ===
                 diaSeleccionado;
 
             const coincideDestino =
               !destinoSeleccionado ||
               String(
-                registro.DESTINO ?? ""
+                registro.destino ?? ""
               ) ===
                 destinoSeleccionado;
 
             const coincideEstado =
               !estadoSeleccionado ||
               String(
-                registro[
-                  "ESTADO DESCARGA"
-                ] ?? ""
+                registro.estado_descarga ?? ""
               ).trim() ===
                 estadoSeleccionado;
 
@@ -2042,9 +2090,7 @@
         registros.filter(
           registro =>
             !estaDescargado(
-              registro[
-                "ESTADO DESCARGA"
-              ]
+              registro.estado_descarga
             )
         );
 
@@ -2089,7 +2135,7 @@
 
           const predio =
             mostrarPredio(
-              registro.PREDIO
+              registro.predio
             );
 
           if (
@@ -2113,9 +2159,7 @@
 
           if (
             estaDescargado(
-              registro[
-                "ESTADO DESCARGA"
-              ]
+              registro.estado_descarga
             )
           ) {
 
@@ -2213,12 +2257,12 @@
 
           const dia =
             obtenerClaveDia(
-              registro["FIN CARGA"]
+              registro["fin_carga"]
             ) || "SIN_FECHA";
 
           const destino =
             mostrarDestino(
-              registro.DESTINO
+              registro.destino
             );
 
           const clave =
@@ -2247,9 +2291,7 @@
 
           if (
             estaDescargado(
-              registro[
-                "ESTADO DESCARGA"
-              ]
+              registro.estado_descarga
             )
           ) {
 
@@ -2374,7 +2416,7 @@
     function obtenerReporteGPS(registro) {
 
       return String(
-        registro["REPORTE GPS HACE"] ?? ""
+        registro["reporte_gps_hace"] ?? ""
       ).trim();
     }
 
@@ -2398,25 +2440,29 @@
       const reporte =
         obtenerReporteGPS(registro);
 
-      if (!reporte) {
-        return "—";
-      }
+      const enlace = String(
+        registro.position_link ?? ""
+      ).trim();
 
-      if (esUrlValida(reporte)) {
+      const texto = reporte || "VER GPS";
+
+      if (esUrlValida(enlace)) {
 
         return `
           <a
             class="boton-gps"
-            href="${escaparHtml(reporte)}"
+            href="${escaparHtml(enlace)}"
             target="_blank"
             rel="noopener noreferrer"
           >
-            VER GPS
+            ${escaparHtml(texto)}
           </a>
         `;
       }
 
-      return escaparHtml(reporte);
+      return reporte
+        ? escaparHtml(reporte)
+        : "—";
     }
 
     function mostrarTabla(
@@ -2456,9 +2502,7 @@
 
             const textoEstado =
               String(
-                registro[
-                  "ESTADO DESCARGA"
-                ] ?? "—"
+                registro.estado_descarga ?? "—"
               );
 
             const claseEstado =
@@ -2473,38 +2517,34 @@
 
                 <td>
                   ${escaparHtml(
-                    registro[
-                      "REMITO MONTE"
-                    ] ?? "—"
+                    registro.numero_1 ?? "—"
                   )}
                 </td>
 
                 <td>
                   ${escaparHtml(
                     mostrarDestino(
-                      registro.DESTINO
+                      registro.destino
                     )
                   )}
                 </td>
 
                 <td>
                   ${escaparHtml(
-                    registro.PREDIO ??
+                    registro.predio ??
                     "—"
                   )}
                 </td>
 
                 <td>
                   ${escaparHtml(
-                    registro[
-                      "VEHÍCULO"
-                    ] ?? "—"
+                    registro.vehiculo ?? "—"
                   )}
                 </td>
 
                 <td>
                   ${escaparHtml(
-                    registro.PRODUCTO ??
+                    registro.producto ??
                     "—"
                   )}
                 </td>
@@ -2512,9 +2552,7 @@
                 <td>
                   ${escaparHtml(
                     formatearFechaHora(
-                      registro[
-                        "FIN CARGA"
-                      ]
+                      registro.fin_carga
                     )
                   )}
                 </td>
@@ -2541,9 +2579,7 @@
 
                 <td>
                   ${escaparHtml(
-                    registro[
-                      "UBICACION - VELOCIDAD"
-                    ] ?? "—"
+                    formatearUbicacionVelocidad(registro) ?? "—"
                   )}
                 </td>
 
