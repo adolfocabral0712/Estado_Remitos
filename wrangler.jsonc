@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
 
-  "name": "estado-descarga-remitos",
+  "name": "estadoremitos",
 
   "main": "src/index.js",
 
