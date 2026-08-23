@@ -1457,6 +1457,93 @@
     }
 
     /* =====================================================
+       COMPATIBILIDAD CON LOS NOMBRES REALES DEL JSON
+       ===================================================== */
+
+    function primerValor(registro, nombres) {
+
+      for (const nombre of nombres) {
+
+        if (
+          Object.prototype.hasOwnProperty.call(registro, nombre) &&
+          registro[nombre] !== null &&
+          registro[nombre] !== undefined
+        ) {
+          return registro[nombre];
+        }
+      }
+
+      return null;
+    }
+
+    function normalizarRegistro(registro) {
+
+      return {
+        ...registro,
+
+        numero_1: primerValor(
+          registro,
+          ["numero_1", "REMITO MONTE", "remito_monte", "REMITO_MONTE"]
+        ),
+
+        destino: primerValor(
+          registro,
+          ["destino", "DESTINO"]
+        ),
+
+        predio: primerValor(
+          registro,
+          ["predio", "PREDIO"]
+        ),
+
+        vehiculo: primerValor(
+          registro,
+          ["vehiculo", "VEHÍCULO", "VEHICULO", "matricula", "MATRICULA"]
+        ),
+
+        producto: primerValor(
+          registro,
+          ["producto", "PRODUCTO"]
+        ),
+
+        fin_carga: primerValor(
+          registro,
+          ["fin_carga", "FIN CARGA", "FIN_CARGA"]
+        ),
+
+        neto_ton: primerValor(
+          registro,
+          ["neto_ton", "NETO", "neto", "NETO_TON"]
+        ),
+
+        estado_descarga: primerValor(
+          registro,
+          ["estado_descarga", "ESTADO DESCARGA", "ESTADO_DESCARGA"]
+        ),
+
+        geocerca: primerValor(
+          registro,
+          ["geocerca", "GEOCERCA", "UBICACION_GPS", "UBICACIÓN GPS", "UBICACION GPS"]
+        ),
+
+        velocidad: primerValor(
+          registro,
+          ["velocidad", "VELOCIDAD"]
+        ),
+
+        reporte_gps_hace: primerValor(
+          registro,
+          ["reporte_gps_hace", "REPORTE GPS HACE", "REPORTE_GPS_HACE"]
+        ),
+
+        position_link: primerValor(
+          registro,
+          ["position_link", "POSITION_LINK", "POSITION LINK", "ENLACE GPS"]
+        )
+      };
+    }
+
+    /* =====================================================
        FILTROS
        ===================================================== */
 
@@ -1956,12 +2043,23 @@
         const datos =
           JSON.parse(texto);
 
+        const registrosRecibidos =
+          Array.isArray(datos)
+            ? datos
+            : Array.isArray(datos.registros)
+              ? datos.registros
+              : Array.isArray(datos.data)
+                ? datos.data
+                : [];
+
         todosLosRegistros =
-          Array.isArray(
-            datos.registros
-          )
-            ? datos.registros
-            : [];
+          registrosRecibidos
+            .filter(
+              registro =>
+                registro &&
+                typeof registro === "object"
+            )
+            .map(normalizarRegistro);
 
         document.getElementById(
           "textoActualizacion"
