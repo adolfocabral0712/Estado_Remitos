@@ -622,6 +622,21 @@
       background: rgba(45, 168, 255, 0.055);
     }
 
+    .tabla-detalle tbody tr.registro-duplicado {
+      background: rgba(255, 193, 7, 0.16);
+      box-shadow: inset 4px 0 0 #ffc107;
+    }
+
+    .tabla-detalle tbody tr.registro-duplicado:hover {
+      background: rgba(255, 193, 7, 0.25);
+    }
+
+    .tabla-detalle tbody tr.registro-duplicado td:nth-child(3),
+    .tabla-detalle tbody tr.registro-duplicado td:nth-child(4) {
+      color: #ffe08a;
+      font-weight: 900;
+    }
+
     .estado {
       display: inline-flex;
       align-items: center;
@@ -972,6 +987,19 @@
 
       </div>
 
+      <div class="bloque-filtro">
+
+        <div class="titulo-filtro">
+          Predio
+        </div>
+
+        <div
+          class="opciones-filtro"
+          id="filtroPredios"
+        ></div>
+
+      </div>
+
       <button
         class="boton-limpiar"
         id="botonLimpiar"
@@ -1260,6 +1288,7 @@
     let diaSeleccionado = "";
     let destinoSeleccionado = "";
     let estadoSeleccionado = "";
+    let predioSeleccionado = "";
 
     let columnaOrden = "fin_carga";
     let direccionOrden = "desc";
@@ -1272,6 +1301,9 @@
 
     const filtroEstados =
       document.getElementById("filtroEstados");
+
+    const filtroPredios =
+      document.getElementById("filtroPredios");
 
     const botonLimpiar =
       document.getElementById("botonLimpiar");
@@ -1886,6 +1918,66 @@
       );
     }
 
+    function construirFiltroPredios() {
+
+      const predios = [
+        ...new Set(
+          todosLosRegistros
+            .map(
+              registro =>
+                String(
+                  registro.predio ?? ""
+                ).trim()
+            )
+            .filter(Boolean)
+        )
+      ].sort(
+        (a, b) =>
+          a.localeCompare(
+            b,
+            "es"
+          )
+      );
+
+      filtroPredios.innerHTML = "";
+
+      filtroPredios.appendChild(
+        crearBotonFiltro(
+          "Todos los predios",
+          "",
+          predioSeleccionado === "",
+          valor => {
+
+            predioSeleccionado = valor;
+
+            construirFiltroPredios();
+            aplicarFiltros();
+          },
+          true
+        )
+      );
+
+      predios.forEach(
+        predio => {
+
+          filtroPredios.appendChild(
+            crearBotonFiltro(
+              predio,
+              predio,
+              predioSeleccionado === predio,
+              valor => {
+
+                predioSeleccionado = valor;
+
+                construirFiltroPredios();
+                aplicarFiltros();
+              }
+            )
+          );
+        }
+      );
+    }
+
     /* =====================================================
        ORDENAMIENTO
        ===================================================== */
@@ -2202,6 +2294,7 @@
         construirFiltroDias();
         construirFiltroDestinos();
         construirFiltroEstados();
+        construirFiltroPredios();
 
         aplicarFiltros();
 
@@ -2272,10 +2365,18 @@
               ).trim() ===
                 estadoSeleccionado;
 
+            const coincidePredio =
+              !predioSeleccionado ||
+              String(
+                registro.predio ?? ""
+              ).trim() ===
+                predioSeleccionado;
+
             return (
               coincideDia &&
               coincideDestino &&
-              coincideEstado
+              coincideEstado &&
+              coincidePredio
             );
           }
         );
@@ -2727,9 +2828,64 @@
         : "—";
     }
 
+    function claveRegistroDuplicado(registro) {
+
+      const dia =
+        obtenerClaveDia(
+          registro.fin_carga
+        );
+
+      const predio =
+        String(
+          registro.predio ?? ""
+        ).trim().toLocaleUpperCase("es");
+
+      const matricula =
+        String(
+          registro.vehiculo ?? ""
+        ).trim().toLocaleUpperCase("es");
+
+      if (!dia || !predio || !matricula) {
+        return "";
+      }
+
+      return `${dia}|${predio}|${matricula}`;
+    }
+
+    function obtenerClavesDuplicadas() {
+
+      const cantidades = new Map();
+
+      todosLosRegistros.forEach(
+        registro => {
+
+          const clave =
+            claveRegistroDuplicado(
+              registro
+            );
+
+          if (!clave) return;
+
+          cantidades.set(
+            clave,
+            (cantidades.get(clave) || 0) + 1
+          );
+        }
+      );
+
+      return new Set(
+        [...cantidades.entries()]
+          .filter(([, cantidad]) => cantidad > 1)
+          .map(([clave]) => clave)
+      );
+    }
+
     function mostrarTabla(
       registros
     ) {
+
+      const clavesDuplicadas =
+        obtenerClavesDuplicadas();
 
       const registrosOrdenados =
         ordenarRegistros(
@@ -2762,6 +2918,13 @@
         registrosOrdenados.map(
           registro => {
 
+            const esDuplicado =
+              clavesDuplicadas.has(
+                claveRegistroDuplicado(
+                  registro
+                )
+              );
+
             const textoEstado =
               String(
                 registro.estado_descarga ?? "—"
@@ -2775,7 +2938,7 @@
                 : "estado-pendiente";
 
             return `
-              <tr>
+              <tr class="${esDuplicado ? "registro-duplicado" : ""}"${esDuplicado ? ' title="Misma matrícula repetida en este predio y día"' : ""}>
 
                 <td>
                   ${escaparHtml(
@@ -2866,10 +3029,12 @@
         diaSeleccionado = "";
         destinoSeleccionado = "";
         estadoSeleccionado = "";
+        predioSeleccionado = "";
 
         construirFiltroDias();
         construirFiltroDestinos();
         construirFiltroEstados();
+        construirFiltroPredios();
 
         aplicarFiltros();
       }
